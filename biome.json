@@ -1,0 +1,58 @@
+{
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": true,
+        "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    },
+    "css": {
+        "parser": { "tailwindDirectives": true }
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 120
+    },
+    "linter": {
+        "enabled": true,
+        "domains": {
+            "next": "all",
+            "react": "all",
+            "types": "all",
+            "turborepo": "all"
+        },
+        "rules": {
+            "nursery": {
+                "noFloatingPromises": "error",
+                "noMisusedPromises": "error",
+                "noUnnecessaryConditions": "error",
+                "useArraySortCompare": "error",
+                "useAwaitThenable": "error",
+                "useConsistentEnumValueType": "error",
+                "useExhaustiveSwitchCases": "error",
+                "useFind": "error",
+                "useRegexpExec": "error"
+            },
+            "correctness": {
+                "useUniqueElementIds": {
+                    "level": "warn",
+                    "options": {
+                        "excludedComponents": ["Script"]
+                    }
+                }
+            }
+        }
+    },
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": "on"
+            }
+        }
+    }
+}
