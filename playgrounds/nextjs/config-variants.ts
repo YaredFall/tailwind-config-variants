@@ -1,6 +1,6 @@
-import { definePlugin, defineRecipe } from "@tailwind-config-variants/core";
+import { defineConfig, defineRecipe } from "@tailwind-config-variants/core";
 
-export default definePlugin({
+export default defineConfig({
     recipes: {
         button: defineRecipe({
             base: "px-4 py-2 rounded-full cursor-pointer font-medium transition-colors",

@@ -1,7 +1,7 @@
 import { camelCase, pascalCase } from "scule";
 import type { Recipe, VariantsMap } from "../types";
 
-export function componentTemplate(name: string, { base, variants, defaultVariants }: Recipe<VariantsMap>) {
+export default function componentTemplate(name: string, { base, variants, defaultVariants }: Recipe<VariantsMap>) {
     const componentName = camelCase(name);
     const typeName = pascalCase(`${componentName}Variants`);
 

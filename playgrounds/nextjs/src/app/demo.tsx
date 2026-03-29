@@ -13,7 +13,7 @@ export default function Demo() {
 
     return (
         <div className="flex gap-2">
-            <Button variant={variants[variant]} onClick={handleClick}>
+            <Button variant={variants[variant]} className="px-10" onClick={handleClick}>
                 Click me
             </Button>
         </div>
