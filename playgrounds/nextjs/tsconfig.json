@@ -20,7 +20,8 @@
         ],
         "paths": {
             "@/*": ["./src/*"],
-            "@cv/*": ["./.config-variants/*"]
+            "@cv/*": ["./.config-variants/*"],
+            "@recipes/*": ["./.config-variants/recipes/*"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", ".next/dev/types/**/*.ts", "**/*.mts"],

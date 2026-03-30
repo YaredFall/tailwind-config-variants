@@ -13,12 +13,33 @@ import { DEFAULT_OUT_DIR, PLUGIN_NAME } from "./constant.ts";
 /**
  * Build and inject all PostCSS nodes derived from the config into `root`.
  */
-export function apply(root: Root, config: TailwindConfigVariantsOptions) {
+export function apply(root: Root, config: TailwindConfigVariantsOptions, configPath: string) {
     const { recipes = {}, outDir = DEFAULT_OUT_DIR } = config;
 
     const rootDir = process.cwd();
     const mainDir = path.join(rootDir, outDir);
     const recipesDir = path.join(rootDir, outDir, "recipes");
+
+    const tailwindImport = root.nodes.find(
+        (node) => node.type === "atrule" && node.name === "import" && node.params.includes("tailwindcss"),
+    );
+
+    if (tailwindImport) {
+        console.log(`[${PLUGIN_NAME}] Detected tailwind v4. Adding source directives...`);
+
+        tailwindImport?.after(
+            new AtRule({
+                name: "source",
+                params: `not "${configPath}"`,
+            }),
+        );
+        tailwindImport?.after(
+            new AtRule({
+                name: "source",
+                params: `"${recipesDir}"`,
+            }),
+        );
+    }
 
     try {
         rmSync(mainDir, { recursive: true });

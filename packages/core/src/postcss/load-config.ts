@@ -1,4 +1,5 @@
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { createJiti } from "jiti";
 import type { TailwindConfigVariantsOptions } from "../config.ts";
 import { PLUGIN_NAME } from "./constant.ts";
@@ -17,7 +18,7 @@ export async function loadConfig(): Promise<{ config: TailwindConfigVariantsOpti
         if (!config || typeof config !== "object") {
             throw new Error(`[${PLUGIN_NAME}] Config at "${fileUrl}" must export a plain object.`);
         }
-        return config;
+        return { config, configPath: fileURLToPath(fileUrl) };
     } catch (err) {
         throw new Error(
             `[${PLUGIN_NAME}] Failed to load config at "${fileUrl}":\n${
