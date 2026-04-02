@@ -105,7 +105,7 @@ export function apply(root: Root, config: TailwindConfigVariantsOptions, configP
 
     // root.append(layer);
 
-    writeFileSync(path.join(mainDir, "plugin.ts"), tailwindTemplate(components));
+    writeFileSync(path.join(mainDir, "plugin.ts"), tailwindTemplate(components, [path.join(recipesDir, "*.ts")]));
 
     console.log(`[${PLUGIN_NAME}] Generated ${components.length} declaration(s)`);
 }
