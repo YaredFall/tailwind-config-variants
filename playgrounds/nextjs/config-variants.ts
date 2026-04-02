@@ -9,6 +9,9 @@ export default defineConfig({
                     primary: "bg-violet-500 text-white hover:bg-violet-600",
                     secondary: "bg-blue-500 text-white hover:bg-blue-600",
                 },
+                disabled: {
+                    true: "opacity-50 cursor-not-allowed",
+                },
             },
             defaultVariants: {
                 variant: "primary",
