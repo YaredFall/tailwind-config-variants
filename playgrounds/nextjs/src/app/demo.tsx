@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Button from "@/components/button";
+import * as Card from "@/components/card";
 
 export default function Demo() {
     const variants = ["primary", "secondary"] as const;
@@ -12,10 +13,12 @@ export default function Demo() {
     };
 
     return (
-        <div className="flex gap-2">
-            <Button variant={variants[variant]} className="px-10" onClick={handleClick}>
+        <Card.Root variant={variants[variant]}>
+            <Card.Title>Tailwind Config Variants</Card.Title>
+            <Card.Description>This is a demo of the plugin</Card.Description>
+            <Button variant={variants[variant]} className="mt-3" onClick={handleClick}>
                 Click me
             </Button>
-        </div>
+        </Card.Root>
     );
 }

@@ -1,10 +1,10 @@
-import type { Recipe, VariantsMap } from "./types";
+import type { Recipe, SlotRecipe } from "./types";
 
 export type TailwindConfigVariantsOptions = {
     /**
      * List of your component recipes
      */
-    recipes?: Record<string, Recipe<VariantsMap>>;
+    recipes?: Record<string, Recipe | SlotRecipe>;
     /**
      * Output directory for generated files
      */

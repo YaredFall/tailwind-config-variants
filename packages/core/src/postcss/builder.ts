@@ -5,10 +5,15 @@ import { camelCase, kebabCase } from "scule";
 import type { TailwindConfigVariantsOptions } from "../config.ts";
 import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
-import componentTemplate from "../templates/recipe.ts";
+import recipeTemplate from "../templates/recipe.ts";
+import slotRecipeTemplate from "../templates/slot-recipe.ts";
+import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind.ts";
-import type { VariantsMap } from "../types.ts";
+import typesTemplate from "../templates/types.ts";
+import type { Recipe, SlotRecipe, SlotVariantMap, VariantsMap } from "../types.ts";
 import { DEFAULT_OUT_DIR, PLUGIN_NAME } from "./constant.ts";
+
+type ComponentData = { className: string; styles: string };
 
 /**
  * Build and inject all PostCSS nodes derived from the config into `root`.
@@ -48,64 +53,121 @@ export function apply(root: Root, config: TailwindConfigVariantsOptions, configP
     }
     mkdirSync(recipesDir, { recursive: true });
 
+    writeFileSync(path.join(mainDir, "types.ts"), typesTemplate());
     writeFileSync(path.join(mainDir, "cn.ts"), cnTemplate());
     writeFileSync(path.join(mainDir, "cva.ts"), cvaTemplate());
+    writeFileSync(path.join(mainDir, "sva.ts"), svaTemplate());
 
-    // const layer = new AtRule({
-    //     name: "layer",
-    //     params: "components",
-    // });
-
-    const components: Array<{ className: string; styles: string }> = [];
+    const components: ComponentData[] = [];
 
     for (const name in recipes) {
         const recipe = recipes[name];
         if (!recipe) continue;
 
-        const baseStyles = recipe.base ?? "";
-        const baseClassName = kebabCase(recipe.className ?? name);
+        if (isCVA(recipe)) {
+            const result = processCVA(name, recipe);
 
-        components.push({ className: baseClassName, styles: baseStyles });
-        // layer.append(
-        //     new Rule({
-        //         selector: `.${baseClassName}`,
-        //         nodes: [new AtRule({ name: "apply", params: baseStyles })],
-        //     }),
-        // );
+            components.push(...result.components);
+            writeFileSync(
+                path.join(recipesDir, `${result.name}.ts`),
+                recipeTemplate(result.name, {
+                    base: result.base,
+                    variants: result.variants,
+                    defaultVariants: result.defaultVariants,
+                }),
+            );
+        } else if (isSVA(recipe)) {
+            const result = processSVA(name, recipe);
 
-        const variants: VariantsMap = {};
-        if (recipe.variants) {
-            for (const key in recipe.variants) {
-                for (const variant in recipe.variants[key]) {
-                    const className = `${baseClassName}-${key}-${variant}`;
-                    const styles = recipe.variants[key][variant] ?? "";
-                    variants[key] ??= {};
-                    variants[key][variant] = className;
-
-                    components.push({ className, styles });
-                    // layer.append(
-                    //     new Rule({
-                    //         selector: `.${className}`,
-                    //         nodes: [new AtRule({ name: "apply", params: styles })],
-                    //     }),
-                    // );
-                }
-            }
+            components.push(...result.components);
+            writeFileSync(
+                path.join(recipesDir, `${result.name}.ts`),
+                slotRecipeTemplate(result.name, {
+                    base: result.base,
+                    variants: result.variants,
+                    defaultVariants: result.defaultVariants,
+                }),
+            );
         }
-
-        writeFileSync(
-            path.join(recipesDir, `${name}.ts`),
-            componentTemplate(camelCase(baseClassName), {
-                base: baseClassName,
-                variants: variants,
-                defaultVariants: recipe.defaultVariants ?? {},
-            }),
-        );
     }
-
-    // root.append(layer);
 
     writeFileSync(path.join(mainDir, "plugin.ts"), tailwindTemplate(components, [path.join(recipesDir, "*.ts")]));
 
     console.log(`[${PLUGIN_NAME}] Generated ${components.length} declaration(s)`);
+}
+
+function isCVA(recipe: Recipe | SlotRecipe): recipe is Recipe {
+    return "__type" in recipe && recipe.__type === "cva";
+}
+function isSVA(recipe: Recipe | SlotRecipe): recipe is SlotRecipe {
+    return "__type" in recipe && recipe.__type === "sva";
+}
+
+function processCVA(key: string, recipe: Recipe) {
+    const components: ComponentData[] = [];
+
+    const baseStyles = recipe.base ?? "";
+    const baseClassName = kebabCase(recipe.className ?? key);
+
+    components.push({ className: baseClassName, styles: baseStyles });
+
+    const variants: VariantsMap = {};
+    if (recipe.variants) {
+        for (const key in recipe.variants) {
+            for (const variant in recipe.variants[key]) {
+                const className = `${baseClassName}-${key}-${variant}`;
+                const styles = recipe.variants[key][variant] ?? "";
+                variants[key] ??= {};
+                variants[key][variant] = className;
+
+                components.push({ className, styles });
+            }
+        }
+    }
+
+    return {
+        name: camelCase(baseClassName),
+        base: baseClassName,
+        variants: variants,
+        defaultVariants: recipe.defaultVariants ?? {},
+        components,
+    };
+}
+
+function processSVA(key: string, recipe: SlotRecipe) {
+    const components: ComponentData[] = [];
+
+    const base = {} as Record<string, string>;
+    const variants: SlotVariantMap = {};
+
+    for (const slot in recipe.base) {
+        const baseStyles = recipe.base[slot] ?? "";
+        const baseClassName = `${kebabCase(recipe.className ?? key)}-${slot}`;
+
+        base[slot] = baseClassName;
+
+        components.push({ className: baseClassName, styles: baseStyles });
+
+        if (recipe.variants) {
+            for (const key in recipe.variants) {
+                for (const variant in recipe.variants[key]) {
+                    const className = `${baseClassName}-${key}-${variant}`;
+                    const styles = recipe.variants[key][variant]?.[slot] ?? "";
+                    variants[key] ??= {};
+                    variants[key][variant] ??= {};
+                    variants[key][variant][slot] = className;
+
+                    components.push({ className, styles });
+                }
+            }
+        }
+    }
+
+    return {
+        name: camelCase(key),
+        base: base,
+        variants: variants,
+        defaultVariants: recipe.defaultVariants ?? {},
+        components,
+    };
 }
