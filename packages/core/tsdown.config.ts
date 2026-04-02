@@ -1,8 +1,12 @@
 import { defineConfig } from "tsdown";
 
-export default defineConfig({
-    entry: ["./src/index.ts", "./src/postcss/index.ts"],
-    platform: "node",
-    unbundle: true,
-    minify: true,
-});
+export default defineConfig([
+    {
+        entry: ["./src/index.ts"],
+        dts: true,
+    },
+    {
+        entry: { postcss: "./src/postcss/index.ts" },
+        format: ["cjs", "esm"],
+    },
+]);

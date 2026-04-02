@@ -7,8 +7,8 @@
                 "default": "./dist/index.mjs"
             },
             "./postcss": {
-                "types": "./dist/postcss/index.d.ts",
-                "default": "./dist/postcss/index.mjs"
+                "import": "./dist/postcss.mjs",
+                "require": "./dist/postcss.cjs"
             }
         }
     },
