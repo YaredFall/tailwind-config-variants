@@ -12,14 +12,19 @@ import tailwindTemplate from "../templates/tailwind.ts";
 import typesTemplate from "../templates/types.ts";
 import type { Recipe, SlotRecipe, SlotVariantMap, VariantsMap } from "../types.ts";
 import { DEFAULT_OUT_DIR, PLUGIN_NAME } from "./constant.ts";
+import { isCVA, isSVA } from "./misc.ts";
 
 type ComponentData = { className: string; styles: string };
 
 /**
  * Build and inject all PostCSS nodes derived from the config into `root`.
  */
-export function apply(root: Root, config: TailwindConfigVariantsOptions) {
-    const { recipes = {}, outDir = DEFAULT_OUT_DIR } = config;
+export function apply(
+    root: Root,
+    recipes: Record<string, Recipe | SlotRecipe>,
+    options: TailwindConfigVariantsOptions = {},
+) {
+    const { outDir = DEFAULT_OUT_DIR } = options;
 
     const rootDir = process.cwd();
     const mainDir = path.join(rootDir, outDir);
@@ -70,16 +75,12 @@ export function apply(root: Root, config: TailwindConfigVariantsOptions) {
         }
     }
 
-    writeFileSync(path.join(mainDir, "plugin.ts"), tailwindTemplate(components, [recipesDir]));
+    writeFileSync(
+        path.join(mainDir, "plugin.ts"),
+        tailwindTemplate(components, [recipesDir, `!${path.posix.resolve("./**/*.recipe.{js,ts}")}`]),
+    );
 
     console.log(`[${PLUGIN_NAME}] Generated ${components.length} declaration(s)`);
-}
-
-function isCVA(recipe: Recipe | SlotRecipe): recipe is Recipe {
-    return "__type" in recipe && recipe.__type === "cva";
-}
-function isSVA(recipe: Recipe | SlotRecipe): recipe is SlotRecipe {
-    return "__type" in recipe && recipe.__type === "sva";
 }
 
 function processCVA(key: string, recipe: Recipe) {
