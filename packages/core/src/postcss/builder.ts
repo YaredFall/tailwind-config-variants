@@ -26,6 +26,8 @@ export function apply(
 ) {
     const { outDir = DEFAULT_OUT_DIR } = options;
 
+    const start = performance.now();
+
     const rootDir = process.cwd();
     const mainDir = path.join(rootDir, outDir);
     const recipesDir = path.join(rootDir, outDir, "recipes");
@@ -42,6 +44,7 @@ export function apply(
     writeFileSync(path.join(mainDir, "cva.ts"), cvaTemplate());
     writeFileSync(path.join(mainDir, "sva.ts"), svaTemplate());
 
+    let recipesCount = 0;
     const components: ComponentData[] = [];
 
     for (const name in recipes) {
@@ -73,6 +76,7 @@ export function apply(
                 }),
             );
         }
+        recipesCount++;
     }
 
     writeFileSync(
@@ -80,7 +84,10 @@ export function apply(
         tailwindTemplate(components, [recipesDir, `!${path.posix.resolve("./**/*.recipe.{js,ts}")}`]),
     );
 
-    console.log(`[${PLUGIN_NAME}] Generated ${components.length} declaration(s)`);
+    const end = performance.now();
+    console.log(
+        `[${PLUGIN_NAME}] Generated ${components.length} declaration(s) for ${recipesCount} recipe(s) in ${(end - start).toFixed(2)}ms`,
+    );
 }
 
 function processCVA(key: string, recipe: Recipe) {
