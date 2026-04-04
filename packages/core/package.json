@@ -38,6 +38,7 @@
         "tailwindcss": "^3.4 || ^4.0"
     },
     "dependencies": {
+        "fast-glob": "^3.3.3",
         "jiti": "^2.6.1",
         "postcss": "^8.5.8"
     }
