@@ -4,7 +4,7 @@ import plugin from "tailwindcss/plugin";
 
 const COMPONENTS = ${JSON.stringify(components, null, 4)};
 
-const tcv = plugin(api => {
+const tailwindConfigVariants = plugin(api => {
     COMPONENTS.forEach((component) => {
         api.addComponents({
             [\`.\${component.className}\`]: {
@@ -12,9 +12,10 @@ const tcv = plugin(api => {
             }
         });
     });
+}, {
+    content: ${JSON.stringify(content, null, 4)}
 });
 
-export default tcv;
-export const TCV_CONTENT = ${JSON.stringify(content)};
+export default tailwindConfigVariants;
 `;
 }

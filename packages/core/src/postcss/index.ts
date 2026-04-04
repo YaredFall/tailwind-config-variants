@@ -19,7 +19,7 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
                 parent: result.opts.from,
             });
 
-            apply(root, config, configPath);
+            apply(root, config);
         },
     };
 };

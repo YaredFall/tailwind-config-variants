@@ -1,6 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { AtRule, type Root } from "postcss";
+import type { Root } from "postcss";
 import { camelCase, kebabCase } from "scule";
 import type { TailwindConfigVariantsOptions } from "../config.ts";
 import cnTemplate from "../templates/cn.ts";
@@ -18,33 +18,12 @@ type ComponentData = { className: string; styles: string };
 /**
  * Build and inject all PostCSS nodes derived from the config into `root`.
  */
-export function apply(root: Root, config: TailwindConfigVariantsOptions, configPath: string) {
+export function apply(root: Root, config: TailwindConfigVariantsOptions) {
     const { recipes = {}, outDir = DEFAULT_OUT_DIR } = config;
 
     const rootDir = process.cwd();
     const mainDir = path.join(rootDir, outDir);
     const recipesDir = path.join(rootDir, outDir, "recipes");
-
-    const tailwindImport = root.nodes.find(
-        (node) => node.type === "atrule" && node.name === "import" && node.params.includes("tailwindcss"),
-    );
-
-    if (tailwindImport) {
-        console.log(`[${PLUGIN_NAME}] Detected tailwind v4. Adding source directives...`);
-
-        tailwindImport?.after(
-            new AtRule({
-                name: "source",
-                params: `not "${configPath}"`,
-            }),
-        );
-        tailwindImport?.after(
-            new AtRule({
-                name: "source",
-                params: `"${recipesDir}"`,
-            }),
-        );
-    }
 
     try {
         rmSync(mainDir, { recursive: true });
@@ -91,7 +70,7 @@ export function apply(root: Root, config: TailwindConfigVariantsOptions, configP
         }
     }
 
-    writeFileSync(path.join(mainDir, "plugin.ts"), tailwindTemplate(components, [path.join(recipesDir, "*.ts")]));
+    writeFileSync(path.join(mainDir, "plugin.ts"), tailwindTemplate(components, [recipesDir]));
 
     console.log(`[${PLUGIN_NAME}] Generated ${components.length} declaration(s)`);
 }
