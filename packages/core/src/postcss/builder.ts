@@ -93,28 +93,29 @@ export function apply(
 function processCVA(key: string, recipe: Recipe) {
     const components: ComponentData[] = [];
 
-    const baseStyles = recipe.base ?? "";
+    const baseStyles = recipe.base;
     const baseClassName = kebabCase(recipe.className ?? key);
 
-    components.push({ className: baseClassName, styles: baseStyles });
+    if (baseStyles) components.push({ className: baseClassName, styles: baseStyles });
 
     const variants: VariantsMap = {};
     if (recipe.variants) {
         for (const key in recipe.variants) {
             for (const variant in recipe.variants[key]) {
                 const className = `${baseClassName}-${key}-${variant}`;
-                const styles = recipe.variants[key][variant] ?? "";
-                variants[key] ??= {};
-                variants[key][variant] = className;
+                const styles = recipe.variants[key][variant];
 
-                components.push({ className, styles });
+                variants[key] ??= {};
+                variants[key][variant] = styles ? className : "";
+
+                if (styles) components.push({ className, styles });
             }
         }
     }
 
     return {
         name: camelCase(baseClassName),
-        base: baseClassName,
+        base: baseStyles ? baseClassName : undefined,
         variants: variants,
         defaultVariants: recipe.defaultVariants ?? {},
         components,
@@ -128,23 +129,23 @@ function processSVA(key: string, recipe: SlotRecipe) {
     const variants: SlotVariantMap = {};
 
     for (const slot in recipe.base) {
-        const baseStyles = recipe.base[slot] ?? "";
+        const baseStyles = recipe.base[slot];
         const baseClassName = `${kebabCase(recipe.className ?? key)}-${slot}`;
 
-        base[slot] = baseClassName;
-
-        components.push({ className: baseClassName, styles: baseStyles });
+        base[slot] = baseStyles ? baseClassName : "";
+        if (baseStyles) components.push({ className: baseClassName, styles: baseStyles });
 
         if (recipe.variants) {
             for (const key in recipe.variants) {
                 for (const variant in recipe.variants[key]) {
                     const className = `${baseClassName}-${key}-${variant}`;
-                    const styles = recipe.variants[key][variant]?.[slot] ?? "";
+                    const styles = recipe.variants[key][variant]?.[slot];
+
                     variants[key] ??= {};
                     variants[key][variant] ??= {};
-                    variants[key][variant][slot] = className;
+                    variants[key][variant][slot] = styles ? className : undefined;
 
-                    components.push({ className, styles });
+                    if (styles) components.push({ className, styles });
                 }
             }
         }
