@@ -4,9 +4,9 @@ type BooleanStringToBoolean<T> = T extends "true" | "false" ? boolean : T;
 
 export type ClassValue = string | null | undefined;
 
-export type VariantMap = Record<string, Record<string, string>>;
-export type Variant<V extends VariantMap> = { [K in keyof V]?: BooleanStringToBoolean<keyof V[K]> };
-export type SlotVariantMap<S extends string = string> = Record<string, Record<string, Record<S, string>>>;
+export type VariantsMap = Record<string, Record<string, string>>;
+export type Variant<V extends VariantsMap> = { [K in keyof V]?: keyof V[K] };
+export type SlotVariantMap<S extends string = string> = Record<string, Record<string, { [K in S]?: string }>>;
 export type SlotVariant<SV extends SlotVariantMap> = { [K in keyof SV]?: keyof SV[K] };
 `;
 }
