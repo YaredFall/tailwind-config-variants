@@ -27,6 +27,11 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
 
             const recipePaths = await glob("**/*.recipe.{ts,js}", { ignore: ["**/node_modules"], absolute: true });
 
+            if (recipePaths.length === 0) {
+                apply(root, {}, config?.module);
+                return;
+            }
+
             const loadedRecipes = await Promise.all(recipePaths.map((path) => loadFile<Recipe | SlotRecipe>(path)));
 
             const recipes = {} as Record<string, Recipe | SlotRecipe>;
