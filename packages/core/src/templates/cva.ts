@@ -12,7 +12,17 @@ export function cva<V extends VariantsMap>({
     variants: V; 
     defaultVariants: Variant<V>;
 }) {
-    return (variant: Variant<V> = {}, ...className: ClassValue[]) => {
+    const splitProps = <P extends Variant<V>>(props: P): [Pick<P, keyof V>, Omit<P, keyof V>] => {
+        const variantProps = {} as P;
+        const otherProps = {} as P
+        for (const key in props) {
+            if (Object.hasOwn(variants, key)) variantProps[key] = props[key];
+            else otherProps[key] = props[key];
+        }
+        return [variantProps, otherProps] as const;
+    }
+
+    return Object.assign((variant: Variant<V> = {}, ...className: ClassValue[]) => {
         const classNames = [base];
         for (const key in variants) {
             const variantValue = variant[key]?.toString();
@@ -25,6 +35,6 @@ export function cva<V extends VariantsMap>({
         }
 
         return cn(...classNames, ...className);
-    };
+    }, { splitProps });
 }`;
 }

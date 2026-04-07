@@ -8,11 +8,22 @@ export function sva<S extends string, SV extends SlotVariantMap<S>>({
     variants,
     defaultVariants
 }: { 
-    base?: Record<S, string>; 
-    variants?: SV;
-    defaultVariants?: SlotVariant<SV>;
+    base: Record<S, string>; 
+    variants: SV;
+    defaultVariants: SlotVariant<SV>;
 }) {
-    return (variant: SlotVariant<SV> = {}) => {
+    const splitProps = <P extends SlotVariant<SV>>(props: P): [Pick<P, keyof SV>, Omit<P, keyof SV>] => {
+        const variantProps = {} as P;
+        const otherProps = {} as P
+        for (const key in props) {
+            if (Object.hasOwn(variants, key)) variantProps[key] = props[key];
+            else otherProps[key] = props[key];
+        }
+        return [variantProps, otherProps] as const;
+    }
+
+
+    return Object.assign((variant: SlotVariant<SV> = {}) => {
         const slotClassNames = {} as Record<S, (string | undefined)[]>;
         for (const slot in base) {
             slotClassNames[slot] = [base[slot]];
@@ -35,6 +46,6 @@ export function sva<S extends string, SV extends SlotVariantMap<S>>({
         }
         
         return result;
-    };
+    }, { splitProps });
 }`;
 }
