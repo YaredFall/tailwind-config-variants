@@ -9,7 +9,6 @@ import recipeTemplate from "../templates/recipe.ts";
 import slotRecipeTemplate from "../templates/slot-recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind.ts";
-import typesTemplate from "../templates/types.ts";
 import type { Recipe, SlotRecipe, SlotVariantMap, VariantsMap } from "../types.ts";
 import { DEFAULT_OUT_DIR, PLUGIN_NAME } from "./constant.ts";
 import { isCVA, isSVA } from "./misc.ts";
@@ -39,7 +38,6 @@ export function apply(
     }
     mkdirSync(recipesDir, { recursive: true });
 
-    writeFileSync(path.join(mainDir, "types.ts"), typesTemplate());
     writeFileSync(path.join(mainDir, "cn.ts"), cnTemplate());
     writeFileSync(path.join(mainDir, "cva.ts"), cvaTemplate());
     writeFileSync(path.join(mainDir, "sva.ts"), svaTemplate());
