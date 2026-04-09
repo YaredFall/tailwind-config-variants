@@ -7,7 +7,7 @@
     "scripts": {
         "release": "pnpm bumpp -r --no-push && pnpm --filter @tailwind-config-variants/* publish"
     },
-    "packageManager": "pnpm@10.12.1",
+    "packageManager": "pnpm@10.33.0",
     "devDependencies": {
         "@biomejs/biome": "^2.4.6",
         "bumpp": "^10.4.1",
