@@ -2,7 +2,7 @@
     "private": true,
     "name": "tailwind-config-variants",
     "type": "module",
-    "version": "0.1.0",
+    "version": "0.0.1",
     "license": "MIT",
     "scripts": {
         "release": "pnpm bumpp -r --no-push && pnpm --filter @tailwind-config-variants/* publish"
