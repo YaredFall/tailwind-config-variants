@@ -4,7 +4,9 @@
     "type": "module",
     "version": "0.1.0",
     "license": "MIT",
-    "scripts": {},
+    "scripts": {
+        "release": "pnpm bumpp -r --no-push && pnpm --filter @tailwind-config-variants/* publish"
+    },
     "packageManager": "pnpm@10.12.1",
     "devDependencies": {
         "@biomejs/biome": "^2.4.6",
