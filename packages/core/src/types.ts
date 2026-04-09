@@ -20,3 +20,13 @@ export type SlotRecipe<S extends string = string, SV extends SlotVariantMap<S> =
     variants?: SV;
     defaultVariants?: SlotVariant<SV>;
 };
+
+export interface CVA<V extends VariantsMap = VariantsMap> {
+    (variant?: Variant<V>, ...className: ClassValue[]): string;
+    splitProps: <P extends Variant<V>>(props: P) => [Pick<P, keyof V>, Omit<P, keyof V>];
+}
+
+export interface SVA<S extends string = string, SV extends SlotVariantMap<S> = SlotVariantMap<S>> {
+    (variant?: SlotVariant<SV>): { [K in S]: (...className: ClassValue[]) => string };
+    splitProps: <P extends SlotVariant<SV>>(props: P) => [Pick<P, keyof SV>, Omit<P, keyof SV>];
+}
