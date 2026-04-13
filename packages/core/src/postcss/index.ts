@@ -27,10 +27,10 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
 
             const resolvedConfig = resolveConfig(config?.module);
 
-            const recipePaths = await glob(resolvedConfig.recipes, {
-                ignore: ["**/node_modules"],
+            const recipePaths = await globby(resolvedConfig.recipes, {
                 absolute: true,
                 onlyFiles: true,
+                gitignore: true,
             });
 
             if (recipePaths.length === 0) {
