@@ -1,8 +1,8 @@
 import path from "node:path";
 import glob from "fast-glob";
 import type { PluginCreator } from "postcss";
-import type { TailwindConfigVariantsOptions } from "../config.ts";
-import type { Recipe, SlotRecipe } from "../types.ts";
+import { resolveConfig } from "../config/resolve-config.ts";
+import type { Recipe, SlotRecipe, TailwindConfigVariantsOptions } from "../types.ts";
 import { apply } from "./builder.ts";
 import { CONFIG_FILENAME, PLUGIN_NAME } from "./constant.ts";
 import { loadFile } from "./load-file.ts";
@@ -25,10 +25,16 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
                 });
             }
 
-            const recipePaths = await glob("**/*.recipe.{ts,js}", { ignore: ["**/node_modules"], absolute: true });
+            const resolvedConfig = resolveConfig(config?.module);
+
+            const recipePaths = await glob(resolvedConfig.recipes, {
+                ignore: ["**/node_modules"],
+                absolute: true,
+                onlyFiles: true,
+            });
 
             if (recipePaths.length === 0) {
-                apply(root, {}, config?.module);
+                apply(root, {}, resolvedConfig);
                 return;
             }
 
@@ -49,7 +55,7 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
                 }
             });
 
-            apply(root, recipes, config?.module);
+            apply(root, recipes, resolvedConfig);
         },
     };
 };

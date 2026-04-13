@@ -2,7 +2,7 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import type { Root } from "postcss";
 import { camelCase, kebabCase } from "scule";
-import type { TailwindConfigVariantsOptions } from "../config.ts";
+import type { ResolvedConfig } from "../config/resolve-config.ts";
 import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
 import recipeTemplate from "../templates/recipe.ts";
@@ -10,7 +10,7 @@ import slotRecipeTemplate from "../templates/slot-recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind.ts";
 import type { Recipe, SlotRecipe, SlotVariantMap, VariantsMap } from "../types.ts";
-import { DEFAULT_OUT_DIR, PLUGIN_NAME } from "./constant.ts";
+import { PLUGIN_NAME } from "./constant.ts";
 import { isCVA, isSVA } from "./misc.ts";
 
 type ComponentData = { className: string; styles: string };
@@ -18,18 +18,13 @@ type ComponentData = { className: string; styles: string };
 /**
  * Build and inject all PostCSS nodes derived from the config into `root`.
  */
-export function apply(
-    root: Root,
-    recipes: Record<string, Recipe | SlotRecipe>,
-    options: TailwindConfigVariantsOptions = {},
-) {
-    const { outDir = DEFAULT_OUT_DIR } = options;
+export function apply(root: Root, recipes: Record<string, Recipe | SlotRecipe>, config: ResolvedConfig) {
+    const { outDir, rootDir } = config;
 
     const start = performance.now();
 
-    const rootDir = process.cwd();
-    const mainDir = path.join(rootDir, outDir);
-    const recipesDir = path.join(rootDir, outDir, "recipes");
+    const mainDir = path.resolve(rootDir, outDir);
+    const recipesDir = path.resolve(rootDir, outDir, "recipes");
 
     try {
         rmSync(mainDir, { recursive: true });

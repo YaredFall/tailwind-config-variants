@@ -30,3 +30,15 @@ export interface SVA<S extends string = string, SV extends SlotVariantMap<S> = S
     (variant?: SlotVariant<SV>): { [K in S]: (...className: ClassValue[]) => string };
     splitProps: <P extends SlotVariant<SV>>(props: P) => [Pick<P, keyof SV>, Omit<P, keyof SV>];
 }
+
+export type TailwindConfigVariantsOptions = {
+    rootDir?: string;
+    /**
+     * Output directory for generated files
+     */
+    outDir?: string;
+    /**
+     * Recipe files glob pattern
+     */
+    recipes?: string[];
+};
