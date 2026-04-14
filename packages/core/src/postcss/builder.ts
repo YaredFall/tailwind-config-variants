@@ -1,5 +1,5 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import path from "node:path";
+import * as path from "pathe";
 import type { Root } from "postcss";
 import { camelCase, kebabCase } from "scule";
 import type { ResolvedConfig } from "../config/resolve-config.ts";
@@ -70,7 +70,8 @@ export function apply(root: Root, recipes: Record<string, Recipe | SlotRecipe>, 
         recipesCount++;
     }
 
-    const twContent = [recipesDir, ...config.recipes.map((p) => `!${path.posix.resolve(p)}`)];
+    const twContent = [recipesDir, ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`)];
+    console.log(twContent);
     writeFileSync(path.join(outDir, "plugin.ts"), tailwindTemplate(components, twContent));
 
     const end = performance.now();

@@ -1,5 +1,5 @@
-import path from "node:path";
 import { globby } from "globby";
+import * as path from "pathe";
 import type { PluginCreator } from "postcss";
 import { resolveConfig } from "../config/resolve-config.ts";
 import type { Recipe, SlotRecipe, TailwindConfigVariantsOptions } from "../types.ts";
