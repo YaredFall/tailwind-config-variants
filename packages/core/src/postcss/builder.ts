@@ -19,23 +19,21 @@ type ComponentData = { className: string; styles: string };
  * Build and inject all PostCSS nodes derived from the config into `root`.
  */
 export function apply(root: Root, recipes: Record<string, Recipe | SlotRecipe>, config: ResolvedConfig) {
-    const { outDir, rootDir } = config;
-
     const start = performance.now();
 
-    const mainDir = path.resolve(rootDir, outDir);
-    const recipesDir = path.resolve(rootDir, outDir, "recipes");
+    const outDir = path.resolve(config.rootDir, config.outDir);
+    const recipesDir = path.resolve(config.rootDir, outDir, "recipes");
 
     try {
-        rmSync(mainDir, { recursive: true });
+        rmSync(outDir, { recursive: true });
     } catch {
         // Directory doesn't exist, ignore
     }
     mkdirSync(recipesDir, { recursive: true });
 
-    writeFileSync(path.join(mainDir, "cn.ts"), cnTemplate());
-    writeFileSync(path.join(mainDir, "cva.ts"), cvaTemplate());
-    writeFileSync(path.join(mainDir, "sva.ts"), svaTemplate());
+    writeFileSync(path.join(outDir, "cn.ts"), cnTemplate());
+    writeFileSync(path.join(outDir, "cva.ts"), cvaTemplate());
+    writeFileSync(path.join(outDir, "sva.ts"), svaTemplate());
 
     let recipesCount = 0;
     const components: ComponentData[] = [];
@@ -72,10 +70,8 @@ export function apply(root: Root, recipes: Record<string, Recipe | SlotRecipe>, 
         recipesCount++;
     }
 
-    writeFileSync(
-        path.join(mainDir, "plugin.ts"),
-        tailwindTemplate(components, [recipesDir, `!${path.posix.resolve("./**/*.recipe.{js,ts}")}`]),
-    );
+    const twContent = [recipesDir, ...config.recipes.map((p) => `!${path.posix.resolve(p)}`)];
+    writeFileSync(path.join(outDir, "plugin.ts"), tailwindTemplate(components, twContent));
 
     const end = performance.now();
     console.log(
