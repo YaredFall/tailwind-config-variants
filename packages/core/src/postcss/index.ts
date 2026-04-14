@@ -43,7 +43,7 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
             const recipes = {} as Record<string, Recipe | SlotRecipe>;
             loadedRecipes.forEach((recipe) => {
                 if (isCVA(recipe.module) || isSVA(recipe.module)) {
-                    const name = path.basename(recipe.resolvedPath, `.recipe${path.extname(recipe.resolvedPath)}`);
+                    const name = path.basename(recipe.resolvedPath).split(".")[0] ?? path.basename(recipe.resolvedPath);
                     recipes[name] = recipe.module;
 
                     result.messages.push({
