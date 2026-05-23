@@ -9,7 +9,7 @@ import recipeTemplate from "../templates/recipe.ts";
 import slotRecipeTemplate from "../templates/slot-recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind.ts";
-import type { Recipe, SlotRecipe, SlotVariantMap, VariantsMap } from "../types.ts";
+import type { Recipe, SlotRecipe, SlotVariantsDefinition, VariantsDefinition } from "../types.ts";
 import { PLUGIN_NAME } from "./constant.ts";
 import { isCVA, isSVA } from "./misc.ts";
 
@@ -88,7 +88,7 @@ function processCVA(key: string, recipe: Recipe) {
 
     if (baseStyles) components.push({ className: baseClassName, styles: baseStyles });
 
-    const variants: VariantsMap = {};
+    const variants: VariantsDefinition = {};
     if (recipe.variants) {
         for (const key in recipe.variants) {
             for (const variant in recipe.variants[key]) {
@@ -116,7 +116,7 @@ function processSVA(key: string, recipe: SlotRecipe) {
     const components: ComponentData[] = [];
 
     const base = {} as Record<string, string>;
-    const variants: SlotVariantMap = {};
+    const variants: SlotVariantsDefinition = {};
 
     for (const slot in recipe.base) {
         const baseStyles = recipe.base[slot];
