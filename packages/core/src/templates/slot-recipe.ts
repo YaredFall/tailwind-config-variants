@@ -9,7 +9,7 @@ import { sva } from "../sva";
 
 const ${name} = sva(${JSON.stringify(recipe, null, 4)});
 
-export type ${typeName} = Parameters<typeof ${name}>[0];
+export type ${typeName} = NonNullable<Parameters<typeof ${name}>[0]>;
 
 export default ${name};`;
 }

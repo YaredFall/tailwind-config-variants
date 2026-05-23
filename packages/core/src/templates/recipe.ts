@@ -9,7 +9,7 @@ import { cva } from "../cva";
 
 const ${name} = cva(${JSON.stringify(recipe, null, 4)});
 
-export type ${typeName} = Parameters<typeof ${name}>[0];
+export type ${typeName} = NonNullable<Parameters<typeof ${name}>[0]>;
 
 export default ${name};`;
 }
