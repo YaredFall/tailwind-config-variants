@@ -71,7 +71,6 @@ export function apply(root: Root, recipes: Record<string, Recipe | SlotRecipe>, 
     }
 
     const twContent = [recipesDir, ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`)];
-    console.log(twContent);
     writeFileSync(path.join(outDir, "plugin.ts"), tailwindTemplate(components, twContent));
 
     const end = performance.now();
