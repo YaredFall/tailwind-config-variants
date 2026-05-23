@@ -7,6 +7,9 @@ export type Variant<V extends VariantsDefinition> = { [K in keyof V]?: BooleanSt
 export type SlotVariantsDefinition<S extends string = string> = Record<string, Record<string, { [K in S]?: string }>>;
 export type SlotVariant<SV extends SlotVariantsDefinition> = { [K in keyof SV]?: BooleanStringToBoolean<keyof SV[K]> };
 
+export type VariantKeys<V extends VariantsDefinition | SlotVariantsDefinition> = Array<keyof V>;
+export type VariantMap<V extends VariantsDefinition | SlotVariantsDefinition> = { [K in keyof V]: Array<keyof V[K]> };
+
 export type Recipe<V extends VariantsDefinition = VariantsDefinition> = {
     className?: string;
     base?: string;
@@ -23,11 +26,15 @@ export type SlotRecipe<S extends string = string, SV extends SlotVariantsDefinit
 
 export interface CVA<V extends VariantsDefinition = VariantsDefinition> {
     (variant?: Variant<V>, ...className: ClassValue[]): string;
+    variantKeys: VariantKeys<V>;
+    variantMap: VariantMap<V>;
     splitProps: <P extends Variant<V>>(props: P) => [Pick<P, keyof V>, Omit<P, keyof V>];
 }
 
 export interface SVA<S extends string = string, SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>> {
     (variant?: SlotVariant<SV>): { [K in S]: (...className: ClassValue[]) => string };
+    variantKeys: VariantKeys<SV>;
+    variantMap: VariantMap<SV>;
     splitProps: <P extends SlotVariant<SV>>(props: P) => [Pick<P, keyof SV>, Omit<P, keyof SV>];
 }
 
