@@ -1,6 +1,8 @@
-export type ClassValue = string | null | undefined;
-
 type BooleanStringToBoolean<T> = T extends "true" | "false" ? boolean : T;
+
+type Pretty<T> = { [K in keyof T]: T[K] } & {};
+
+export type ClassValue = string | null | undefined;
 
 export type VariantsDefinition = Record<string, Record<string, string>>;
 export type SlotVariantsDefinition<S extends string = string> = Record<string, Record<string, { [K in S]?: string }>>;
@@ -10,7 +12,9 @@ export type RecipeVariant<V extends VariantsDefinition | SlotVariantsDefinition>
 };
 
 export type VariantKeys<V extends VariantsDefinition | SlotVariantsDefinition> = Array<keyof V>;
-export type VariantMap<V extends VariantsDefinition | SlotVariantsDefinition> = { [K in keyof V]: Array<keyof V[K]> };
+export type VariantMap<V extends VariantsDefinition | SlotVariantsDefinition> = Pretty<{
+    [K in keyof V]: Array<keyof V[K]>;
+}>;
 
 export type Recipe<V extends VariantsDefinition = VariantsDefinition> = {
     className?: string;
@@ -40,7 +44,7 @@ export interface SVA<S extends string = string, SV extends SlotVariantsDefinitio
     splitProps: <P extends RecipeVariant<SV>>(props: P) => [Pick<P, keyof SV>, Omit<P, keyof SV>];
 }
 
-export type RecipeVariantProps<V extends CVA | SVA> = NonNullable<Parameters<V>[0]>;
+export type RecipeVariantProps<V extends CVA | SVA> = Pretty<NonNullable<Parameters<V>[0]>>;
 
 export type TailwindConfigVariantsOptions = {
     rootDir?: string;
