@@ -40,6 +40,8 @@ export interface SVA<S extends string = string, SV extends SlotVariantsDefinitio
     splitProps: <P extends RecipeVariant<SV>>(props: P) => [Pick<P, keyof SV>, Omit<P, keyof SV>];
 }
 
+export type RecipeVariantProps<V extends CVA | SVA> = NonNullable<Parameters<V>[0]>;
+
 export type TailwindConfigVariantsOptions = {
     rootDir?: string;
     /**
