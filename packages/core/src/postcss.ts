@@ -3,14 +3,14 @@ import * as path from "pathe";
 import type { PluginCreator } from "postcss";
 import { execute } from "./builder/index.ts";
 import { resolveConfig } from "./config/resolve.ts";
-import { CONFIG_FILENAME, PLUGIN_NAME } from "./constant.ts";
+import { CONFIG_FILENAME, POSTCSS_PLUGIN_NAME } from "./constant.ts";
 import { loadFile } from "./loader.ts";
 import { isCVA, isSVA } from "./recipes/predicate.ts";
 import type { Recipe, SlotRecipe, TailwindConfigVariantsOptions } from "./types.ts";
 
 const plugin = (): ReturnType<PluginCreator<unknown>> => {
     return {
-        postcssPlugin: PLUGIN_NAME,
+        postcssPlugin: POSTCSS_PLUGIN_NAME,
 
         async Once(_, { result }) {
             const config = await loadFile<TailwindConfigVariantsOptions>(path.resolve(CONFIG_FILENAME)).catch(() => {});
@@ -18,7 +18,7 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
             if (config) {
                 result.messages.push({
                     type: "dependency",
-                    plugin: PLUGIN_NAME,
+                    plugin: POSTCSS_PLUGIN_NAME,
                     file: config.resolvedPath,
                     parent: result.opts.from,
                 });
@@ -47,7 +47,7 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
 
                     result.messages.push({
                         type: "dependency",
-                        plugin: PLUGIN_NAME,
+                        plugin: POSTCSS_PLUGIN_NAME,
                         file: recipe.resolvedPath,
                         parent: result.opts.from,
                     });

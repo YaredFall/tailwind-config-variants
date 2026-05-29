@@ -1,7 +1,7 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as path from "pathe";
 import type { ResolvedConfig } from "../config/resolve.ts";
-import { PLUGIN_NAME } from "../constant.ts";
+import { LIBRARY_NAME } from "../constant.ts";
 import { isCVA, isSVA } from "../recipes/predicate.ts";
 import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
@@ -56,6 +56,6 @@ export function execute(recipes: Record<string, Recipe | SlotRecipe>, config: Re
 
     const end = performance.now();
     console.log(
-        `[${PLUGIN_NAME}] Generated ${ctx.components.length} declaration(s) for ${ctx.recipes.size} recipe(s) and ${ctx.slotRecipes.size} slot recipe(s) in ${(end - start).toFixed(2)}ms`,
+        `[${LIBRARY_NAME}] Generated ${ctx.components.length} declaration(s) for ${ctx.recipes.size} recipe(s) and ${ctx.slotRecipes.size} slot recipe(s) in ${(end - start).toFixed(2)}ms`,
     );
 }
