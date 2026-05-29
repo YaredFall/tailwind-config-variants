@@ -1,6 +1,6 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as path from "pathe";
-import type { ResolvedConfig } from "../config/resolve-config.ts";
+import type { ResolvedConfig } from "../config/resolve.ts";
 import { PLUGIN_NAME } from "../constant.ts";
 import { isCVA, isSVA } from "../recipes/predicate.ts";
 import cnTemplate from "../templates/cn.ts";

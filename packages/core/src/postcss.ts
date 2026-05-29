@@ -2,7 +2,7 @@ import { globby } from "globby";
 import * as path from "pathe";
 import type { PluginCreator } from "postcss";
 import { execute } from "./builder/index.ts";
-import { resolveConfig } from "./config/resolve-config.ts";
+import { resolveConfig } from "./config/resolve.ts";
 import { CONFIG_FILENAME, PLUGIN_NAME } from "./constant.ts";
 import { loadFile } from "./loader.ts";
 import { isCVA, isSVA } from "./recipes/predicate.ts";
