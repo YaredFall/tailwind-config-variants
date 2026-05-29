@@ -1,4 +1,4 @@
-import type { RecipeVariant, SlotVariantsDefinition, VariantKeys, VariantMap, VariantsDefinition } from "./types";
+import type { RecipeVariant, SlotVariantsDefinition, VariantKeys, VariantMap, VariantsDefinition } from "../types";
 
 export function getVariantKeys<V extends VariantsDefinition | SlotVariantsDefinition>(variants: V): VariantKeys<V> {
     return Object.keys(variants);
@@ -17,6 +17,7 @@ export function createSplitProps<V extends VariantsDefinition | SlotVariantsDefi
         const variantProps = {} as typeof props;
         const otherProps = {} as typeof props;
         for (const key in props) {
+            // biome-ignore lint/suspicious/noPrototypeBuiltins: better compatibility
             if (variants.hasOwnProperty(key)) variantProps[key] = props[key];
             else otherProps[key] = props[key];
         }

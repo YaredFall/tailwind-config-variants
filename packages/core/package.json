@@ -27,7 +27,7 @@
     ],
     "exports": {
         ".": "./src/index.ts",
-        "./postcss": "./src/postcss/index.ts"
+        "./postcss": "./src/postcss.ts"
     },
     "devDependencies": {
         "@types/node": "^24",

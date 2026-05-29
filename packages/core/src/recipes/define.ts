@@ -1,4 +1,4 @@
-import type { Recipe, SlotRecipe, SlotVariantsDefinition, VariantsDefinition } from "./types";
+import type { Recipe, SlotRecipe, SlotVariantsDefinition, VariantsDefinition } from "../types";
 
 export function defineRecipe<V extends VariantsDefinition>(recipe: Recipe<V>) {
     return Object.assign(recipe, { __type: "cva" });

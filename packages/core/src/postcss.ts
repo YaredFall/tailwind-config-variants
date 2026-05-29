@@ -1,19 +1,18 @@
 import { globby } from "globby";
 import * as path from "pathe";
 import type { PluginCreator } from "postcss";
-import { resolveConfig } from "../config/resolve-config.ts";
-import type { Recipe, SlotRecipe, TailwindConfigVariantsOptions } from "../types.ts";
-import { apply } from "./builder.ts";
+import { execute } from "./builder/index.ts";
+import { resolveConfig } from "./config/resolve-config.ts";
 import { CONFIG_FILENAME, PLUGIN_NAME } from "./constant.ts";
-import { loadFile } from "./load-file.ts";
-import { isCVA, isSVA } from "./misc.ts";
+import { loadFile } from "./loader.ts";
+import { isCVA, isSVA } from "./recipes/predicate.ts";
+import type { Recipe, SlotRecipe, TailwindConfigVariantsOptions } from "./types.ts";
 
 const plugin = (): ReturnType<PluginCreator<unknown>> => {
     return {
         postcssPlugin: PLUGIN_NAME,
 
-        // OnceExit runs after all other plugins, once per CSS document.
-        async Once(root, { result }) {
+        async Once(_, { result }) {
             const config = await loadFile<TailwindConfigVariantsOptions>(path.resolve(CONFIG_FILENAME)).catch(() => {});
 
             if (config) {
@@ -34,7 +33,7 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
             });
 
             if (recipePaths.length === 0) {
-                apply(root, {}, resolvedConfig);
+                execute({}, resolvedConfig);
                 return;
             }
 
@@ -55,7 +54,7 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
                 }
             });
 
-            apply(root, recipes, resolvedConfig);
+            execute(recipes, resolvedConfig);
         },
     };
 };
