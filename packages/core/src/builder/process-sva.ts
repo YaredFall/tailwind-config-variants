@@ -22,7 +22,7 @@ export function processSVA(ctx: BuilderContext, recipeKey: string, recipe: SlotR
 
                     variants[key] ??= {};
                     variants[key][variant] ??= {};
-                    variants[key][variant][slot] = styles ? className : undefined;
+                    variants[key][variant][slot] = styles ? className : "";
 
                     if (styles) ctx.addComponent({ className, styles });
                 }
