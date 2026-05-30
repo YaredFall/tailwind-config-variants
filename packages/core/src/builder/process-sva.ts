@@ -1,8 +1,8 @@
 import { kebabCase } from "scule";
-import type { SlotRecipe, SlotVariantsDefinition } from "../types";
+import type { SlotRecipeDefinition, SlotVariantsDefinition } from "../types";
 import type { BuilderContext } from "./context";
 
-export function processSVA(ctx: BuilderContext, recipeKey: string, recipe: SlotRecipe) {
+export function processSVA(ctx: BuilderContext, recipeKey: string, recipe: SlotRecipeDefinition) {
     const rootClassName = recipe.className ?? kebabCase(recipeKey);
     const base = {} as Record<string, string>;
     const variants: SlotVariantsDefinition = {};

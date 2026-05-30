@@ -1,13 +1,11 @@
 import type { Recipe, SlotRecipe } from "../types";
 
 export type ComponentData = { className: string; styles: string };
-export type RecipeData = Omit<Required<Recipe>, "className">;
-export type SlotRecipeData = Omit<Required<SlotRecipe>, "className">;
 
 export class BuilderContext {
     #components: ComponentData[] = [];
-    #recipes = new Map<string, RecipeData>();
-    #slotRecipes = new Map<string, SlotRecipeData>();
+    #recipes = new Map<string, Recipe>();
+    #slotRecipes = new Map<string, SlotRecipe>();
 
     addComponent(component: ComponentData) {
         this.#components.push(component);
@@ -17,11 +15,11 @@ export class BuilderContext {
         return this.#components;
     }
 
-    addRecipe(recipeKey: string, recipe: RecipeData) {
+    addRecipe(recipeKey: string, recipe: Recipe) {
         this.#recipes.set(recipeKey, recipe);
     }
 
-    addSlotRecipe(recipeKey: string, recipe: SlotRecipeData) {
+    addSlotRecipe(recipeKey: string, recipe: SlotRecipe) {
         this.#slotRecipes.set(recipeKey, recipe);
     }
 

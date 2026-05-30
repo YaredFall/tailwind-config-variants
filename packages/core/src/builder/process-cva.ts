@@ -1,8 +1,8 @@
 import { kebabCase } from "scule";
-import type { Recipe, VariantsDefinition } from "../types";
+import type { RecipeDefinition, VariantsDefinition } from "../types";
 import type { BuilderContext } from "./context";
 
-export function processCVA(ctx: BuilderContext, recipeKey: string, recipe: Recipe) {
+export function processCVA(ctx: BuilderContext, recipeKey: string, recipe: RecipeDefinition) {
     const baseStyles = recipe.base;
     const baseClassName = recipe.className ?? kebabCase(recipeKey);
 

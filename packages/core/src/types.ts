@@ -16,19 +16,31 @@ export type VariantMap<V extends VariantsDefinition | SlotVariantsDefinition> = 
     [K in keyof V]: Array<keyof V[K]>;
 }>;
 
-export type Recipe<V extends VariantsDefinition = VariantsDefinition> = {
-    className?: string;
-    base?: string;
-    variants?: V;
-    defaultVariants?: RecipeVariant<V>;
-};
+export interface Recipe<V extends VariantsDefinition = VariantsDefinition> {
+    base: string;
+    variants: V;
+    defaultVariants: RecipeVariant<V>;
+}
 
-export type SlotRecipe<S extends string = string, SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>> = {
+export interface RecipeDefinition<V extends VariantsDefinition = VariantsDefinition> extends Partial<Recipe<V>> {
     className?: string;
-    base?: Record<S, string>;
-    variants?: SV;
-    defaultVariants?: RecipeVariant<SV>;
-};
+}
+
+export interface SlotRecipe<
+    S extends string = string,
+    SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>,
+> {
+    base: Record<S, string>;
+    variants: SV;
+    defaultVariants: RecipeVariant<SV>;
+}
+
+export interface SlotRecipeDefinition<
+    S extends string = string,
+    SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>,
+> extends Partial<SlotRecipe<S, SV>> {
+    className?: string;
+}
 
 export type CVA<V extends VariantsDefinition = VariantsDefinition> = (
     variant?: RecipeVariant<V>,

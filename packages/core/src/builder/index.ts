@@ -9,12 +9,12 @@ import recipeTemplate from "../templates/recipe.ts";
 import slotRecipeTemplate from "../templates/slot-recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind.ts";
-import type { Recipe, SlotRecipe } from "../types.ts";
+import type { RecipeDefinition, SlotRecipeDefinition } from "../types.ts";
 import { BuilderContext } from "./context.ts";
 import { processCVA } from "./process-cva.ts";
 import { processSVA } from "./process-sva.ts";
 
-export function execute(recipes: Record<string, Recipe | SlotRecipe>, config: ResolvedConfig) {
+export function execute(recipes: Record<string, RecipeDefinition | SlotRecipeDefinition>, config: ResolvedConfig) {
     const start = performance.now();
 
     const outDir = path.resolve(config.rootDir, config.outDir);

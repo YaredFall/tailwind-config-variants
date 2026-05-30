@@ -1,8 +1,8 @@
-import type { Recipe, SlotRecipe } from "../types";
+import type { RecipeDefinition, SlotRecipeDefinition } from "../types";
 
-export function isCVA(recipe: Recipe | SlotRecipe): recipe is Recipe {
+export function isCVA(recipe: RecipeDefinition | SlotRecipeDefinition): recipe is RecipeDefinition {
     return "__type" in recipe && recipe.__type === "cva";
 }
-export function isSVA(recipe: Recipe | SlotRecipe): recipe is SlotRecipe {
+export function isSVA(recipe: RecipeDefinition | SlotRecipeDefinition): recipe is SlotRecipeDefinition {
     return "__type" in recipe && recipe.__type === "sva";
 }

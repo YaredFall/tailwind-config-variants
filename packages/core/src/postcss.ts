@@ -6,7 +6,7 @@ import { resolveConfig } from "./config/resolve.ts";
 import { CONFIG_FILENAME, POSTCSS_PLUGIN_NAME } from "./constant.ts";
 import { loadFile } from "./loader.ts";
 import { isCVA, isSVA } from "./recipes/predicate.ts";
-import type { Recipe, SlotRecipe, TailwindConfigVariantsOptions } from "./types.ts";
+import type { RecipeDefinition, SlotRecipeDefinition, TailwindConfigVariantsOptions } from "./types.ts";
 
 const plugin = (): ReturnType<PluginCreator<unknown>> => {
     return {
@@ -37,9 +37,11 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
                 return;
             }
 
-            const loadedRecipes = await Promise.all(recipePaths.map((path) => loadFile<Recipe | SlotRecipe>(path)));
+            const loadedRecipes = await Promise.all(
+                recipePaths.map((path) => loadFile<RecipeDefinition | SlotRecipeDefinition>(path)),
+            );
 
-            const recipes = {} as Record<string, Recipe | SlotRecipe>;
+            const recipes = {} as Record<string, RecipeDefinition | SlotRecipeDefinition>;
             loadedRecipes.forEach((recipe) => {
                 if (isCVA(recipe.module) || isSVA(recipe.module)) {
                     const name = path.basename(recipe.resolvedPath).split(".")[0] ?? path.basename(recipe.resolvedPath);
