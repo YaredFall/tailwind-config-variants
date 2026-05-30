@@ -1,5 +1,5 @@
 import { pascalCase } from "scule";
-import { LIBRARY_NAME } from "../constant";
+import { LIBRARY_NAME } from "../constant.ts";
 import type { Recipe } from "../types";
 
 export default function recipeTemplate(name: string, recipe: Recipe) {

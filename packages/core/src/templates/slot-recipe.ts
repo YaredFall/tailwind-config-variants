@@ -1,5 +1,5 @@
 import { pascalCase } from "scule";
-import { LIBRARY_NAME } from "../constant";
+import { LIBRARY_NAME } from "../constant.ts";
 import type { SlotRecipe } from "../types";
 
 export default function slotRecipeTemplate(name: string, recipe: SlotRecipe) {
