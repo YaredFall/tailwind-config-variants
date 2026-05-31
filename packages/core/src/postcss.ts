@@ -1,62 +1,46 @@
-import { globby } from "globby";
-import * as path from "pathe";
 import type { PluginCreator } from "postcss";
 import { execute } from "./builder/index.ts";
+import { loadConfig } from "./config/load.ts";
 import { resolveConfig } from "./config/resolve.ts";
-import { CONFIG_FILENAME, POSTCSS_PLUGIN_NAME } from "./constant.ts";
-import { loadFile } from "./loader.ts";
-import { isCVA, isSVA } from "./recipes/predicate.ts";
-import type { RecipeDefinition, SlotRecipeDefinition, TailwindConfigVariantsOptions } from "./types.ts";
+import { POSTCSS_PLUGIN_NAME } from "./constant.ts";
+import { loadRecipes } from "./recipes/load.ts";
+import { resolveRecipe } from "./recipes/resolve.ts";
+import type { RecipeDefinition, SlotRecipeDefinition } from "./types.ts";
 
 const plugin = (): ReturnType<PluginCreator<unknown>> => {
     return {
         postcssPlugin: POSTCSS_PLUGIN_NAME,
 
         async Once(_, { result }) {
-            const config = await loadFile<TailwindConfigVariantsOptions>(path.resolve(CONFIG_FILENAME)).catch(() => {});
-
-            if (config) {
+            function addDependency(path: string) {
                 result.messages.push({
                     type: "dependency",
                     plugin: POSTCSS_PLUGIN_NAME,
-                    file: config.resolvedPath,
+                    file: path,
                     parent: result.opts.from,
                 });
             }
 
-            const resolvedConfig = resolveConfig(config?.module);
+            const config = await loadConfig();
+            if (config) addDependency(config.resolvedPath);
 
-            const recipePaths = await globby(resolvedConfig.recipes, {
-                absolute: true,
-                onlyFiles: true,
-                gitignore: true,
-            });
+            const resolvedConfig = resolveConfig(config);
 
-            if (recipePaths.length === 0) {
-                execute({}, resolvedConfig);
-                return;
-            }
+            const recipes = await loadRecipes(resolvedConfig.recipes);
 
-            const loadedRecipes = await Promise.all(
-                recipePaths.map((path) => loadFile<RecipeDefinition | SlotRecipeDefinition>(path)),
-            );
+            const resolvedRecipes = {} as Record<string, RecipeDefinition | SlotRecipeDefinition>;
+            recipes.forEach((file) => {
+                try {
+                    const { name, definition } = resolveRecipe(file);
+                    resolvedRecipes[name] = definition;
 
-            const recipes = {} as Record<string, RecipeDefinition | SlotRecipeDefinition>;
-            loadedRecipes.forEach((recipe) => {
-                if (isCVA(recipe.module) || isSVA(recipe.module)) {
-                    const name = path.basename(recipe.resolvedPath).split(".")[0] ?? path.basename(recipe.resolvedPath);
-                    recipes[name] = recipe.module;
-
-                    result.messages.push({
-                        type: "dependency",
-                        plugin: POSTCSS_PLUGIN_NAME,
-                        file: recipe.resolvedPath,
-                        parent: result.opts.from,
-                    });
+                    addDependency(file.resolvedPath);
+                } catch {
+                    // Skip unresolved
                 }
             });
 
-            execute(recipes, resolvedConfig);
+            execute(resolvedRecipes, resolvedConfig);
         },
     };
 };

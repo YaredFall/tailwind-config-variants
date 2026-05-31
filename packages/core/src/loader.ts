@@ -1,7 +1,9 @@
 import { fileURLToPath } from "node:url";
 import { createJiti } from "jiti";
 
-export async function loadFile<T>(path: string): Promise<{ module: T; resolvedPath: string }> {
+export type ResolvedFile<T> = { module: T; resolvedPath: string };
+
+export async function loadFile<T>(path: string): Promise<ResolvedFile<T>> {
     // A new jiti instance per load = no stale cache.
     const jiti = createJiti(import.meta.url, {
         requireCache: false, // disable internal cache → always re-evaluates

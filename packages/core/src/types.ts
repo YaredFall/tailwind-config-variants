@@ -54,14 +54,3 @@ export type SVA<S extends string = string, SV extends SlotVariantsDefinition<S> 
 export type RecipeVariantProps<V extends CVA<VariantsDefinition> | SVA<string, SlotVariantsDefinition<string>>> =
     Pretty<NonNullable<Parameters<V>[0]>>;
 
-export type TailwindConfigVariantsOptions = {
-    rootDir?: string;
-    /**
-     * Output directory for generated files
-     */
-    outDir?: string;
-    /**
-     * Recipe files glob pattern
-     */
-    recipes?: string[];
-};
