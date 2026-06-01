@@ -1,24 +1,25 @@
 import { kebabCase } from "scule";
-import type { SlotRecipeDefinition, SlotVariantsDefinition } from "../types";
-import type { BuilderContext } from "./context";
+import type { ResolvedSlotRecipeDefinition } from "../recipes/resolve.ts";
+import type { SlotVariantsDefinition } from "../types.ts";
+import type { BuilderContext } from "./context.ts";
 
-export function processSVA(ctx: BuilderContext, recipeKey: string, recipe: SlotRecipeDefinition) {
-    const rootClassName = recipe.className ?? kebabCase(recipeKey);
+export function processSVA(ctx: BuilderContext, name: string, definition: ResolvedSlotRecipeDefinition) {
+    const rootClassName = definition.className ?? kebabCase(name);
     const base = {} as Record<string, string>;
     const variants: SlotVariantsDefinition = {};
 
-    for (const slot in recipe.base) {
-        const baseStyles = recipe.base[slot];
+    for (const slot in definition.base) {
+        const baseStyles = definition.base[slot];
         const baseClassName = `${rootClassName}-${slot}`;
 
         base[slot] = baseStyles ? baseClassName : "";
         if (baseStyles) ctx.addComponent({ className: baseClassName, styles: baseStyles });
 
-        if (recipe.variants) {
-            for (const key in recipe.variants) {
-                for (const variant in recipe.variants[key]) {
+        if (definition.variants) {
+            for (const key in definition.variants) {
+                for (const variant in definition.variants[key]) {
                     const className = `${baseClassName}-${key}-${variant}`;
-                    const styles = recipe.variants[key][variant]?.[slot];
+                    const styles = definition.variants[key][variant]?.[slot];
 
                     variants[key] ??= {};
                     variants[key][variant] ??= {};
@@ -30,9 +31,12 @@ export function processSVA(ctx: BuilderContext, recipeKey: string, recipe: SlotR
         }
     }
 
-    ctx.addSlotRecipe(recipeKey, {
-        base: base,
-        variants: variants,
-        defaultVariants: recipe.defaultVariants ?? {},
+    ctx.addSlotRecipe(definition.hash, {
+        name,
+        definition: {
+            base: base,
+            variants: variants,
+            defaultVariants: definition.defaultVariants ?? {},
+        },
     });
 }

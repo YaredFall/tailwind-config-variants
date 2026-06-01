@@ -39,11 +39,11 @@ export function execute(recipes: (ResolvedRecipe | ResolvedSlotRecipe)[], config
         else if (type === "sva") processSVA(ctx, name, definition);
     }
 
-    ctx.recipes.forEach((recipe, key) => {
-        writeFileSync(path.join(recipesDir, `${key}.ts`), recipeTemplate(key, recipe));
+    ctx.recipes.forEach(({ name, definition }) => {
+        writeFileSync(path.join(recipesDir, `${name}.ts`), recipeTemplate(name, definition));
     });
-    ctx.slotRecipes.forEach((recipe, key) => {
-        writeFileSync(path.join(recipesDir, `${key}.ts`), slotRecipeTemplate(key, recipe));
+    ctx.slotRecipes.forEach(({ name, definition }) => {
+        writeFileSync(path.join(recipesDir, `${name}.ts`), slotRecipeTemplate(name, definition));
     });
 
     const twContent = [recipesDir, ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`)];

@@ -1,19 +1,20 @@
 import { kebabCase } from "scule";
-import type { RecipeDefinition, VariantsDefinition } from "../types";
-import type { BuilderContext } from "./context";
+import type { ResolvedRecipeDefinition } from "../recipes/resolve.ts";
+import type { VariantsDefinition } from "../types.ts";
+import type { BuilderContext } from "./context.ts";
 
-export function processCVA(ctx: BuilderContext, recipeKey: string, recipe: RecipeDefinition) {
-    const baseStyles = recipe.base;
-    const baseClassName = recipe.className ?? kebabCase(recipeKey);
+export function processCVA(ctx: BuilderContext, name: string, definition: ResolvedRecipeDefinition) {
+    const baseStyles = definition.base;
+    const baseClassName = definition.className ?? kebabCase(name);
 
     if (baseStyles) ctx.addComponent({ className: baseClassName, styles: baseStyles });
 
     const variants: VariantsDefinition = {};
-    if (recipe.variants) {
-        for (const key in recipe.variants) {
-            for (const variant in recipe.variants[key]) {
+    if (definition.variants) {
+        for (const key in definition.variants) {
+            for (const variant in definition.variants[key]) {
                 const className = `${baseClassName}-${key}-${variant}`;
-                const styles = recipe.variants[key][variant];
+                const styles = definition.variants[key][variant];
 
                 variants[key] ??= {};
                 variants[key][variant] = styles ? className : "";
@@ -23,9 +24,12 @@ export function processCVA(ctx: BuilderContext, recipeKey: string, recipe: Recip
         }
     }
 
-    ctx.addRecipe(recipeKey, {
-        base: baseStyles ? baseClassName : "",
-        variants: variants,
-        defaultVariants: recipe.defaultVariants ?? {},
+    ctx.addRecipe(definition.hash, {
+        name,
+        definition: {
+            base: baseStyles ? baseClassName : "",
+            variants: variants,
+            defaultVariants: definition.defaultVariants ?? {},
+        },
     });
 }
