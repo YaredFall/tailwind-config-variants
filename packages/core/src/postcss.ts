@@ -20,17 +20,17 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
                 });
             }
 
-            const config = await loadConfig();
-            if (config) addDependency(config.resolvedPath);
+            const configFile = await loadConfig();
+            if (configFile) addDependency(configFile.resolvedPath);
 
-            const resolvedConfig = resolveConfig(config);
+            const config = resolveConfig(configFile);
 
-            const recipes = await loadRecipes(resolvedConfig.recipes);
-            recipes.forEach((file) => void addDependency(file.resolvedPath));
+            const recipeFiles = await loadRecipes(config.recipes);
+            recipeFiles.forEach((file) => void addDependency(file.resolvedPath));
 
-            const resolvedRecipes = resolveRecipes(recipes);
+            const recipes = resolveRecipes(recipeFiles);
 
-            execute(resolvedRecipes, resolvedConfig);
+            execute({ config, recipes });
         },
     };
 };

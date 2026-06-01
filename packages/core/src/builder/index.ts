@@ -12,7 +12,12 @@ import { BuilderContext } from "./context.ts";
 import { processCVA } from "./process-cva.ts";
 import { processSVA } from "./process-sva.ts";
 
-export function execute(recipes: (ResolvedRecipe | ResolvedSlotRecipe)[], config: ResolvedConfig) {
+type BuilderParams = {
+    recipes: (ResolvedRecipe | ResolvedSlotRecipe)[];
+    config: ResolvedConfig;
+};
+
+export function execute({ config, recipes }: BuilderParams) {
     const start = performance.now();
 
     const outDir = path.resolve(config.rootDir, config.outDir);
