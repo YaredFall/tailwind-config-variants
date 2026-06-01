@@ -1,7 +1,7 @@
 import type { Recipe, SlotRecipe } from "../types";
 
-type ComponentData = { className: string; styles: string };
-type RecipeData =
+export type ComponentData = { className: string; styles: string };
+export type RecipeData =
     | { name: string; type: "cva"; definition: Recipe }
     | { name: string; type: "sva"; definition: SlotRecipe };
 

@@ -1,16 +1,10 @@
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
-import * as path from "pathe";
 import type { ResolvedConfig } from "../config/resolve.ts";
 import { LIBRARY_NAME } from "../constant.ts";
 import type { ResolvedRecipe, ResolvedSlotRecipe } from "../recipes/resolve.ts";
-import cnTemplate from "../templates/cn.ts";
-import cvaTemplate from "../templates/cva.ts";
-import recipeTemplate from "../templates/recipe.ts";
-import svaTemplate from "../templates/sva.ts";
-import tailwindTemplate from "../templates/tailwind.ts";
 import { BuilderContext } from "./context.ts";
 import { processCVA } from "./process-cva.ts";
 import { processSVA } from "./process-sva.ts";
+import { Writer } from "./writer.ts";
 
 type BuilderParams = {
     recipes: (ResolvedRecipe | ResolvedSlotRecipe)[];
@@ -20,19 +14,13 @@ type BuilderParams = {
 export function execute({ config, recipes }: BuilderParams) {
     const start = performance.now();
 
-    const outDir = path.resolve(config.rootDir, config.outDir);
-    const recipesDir = path.resolve(config.rootDir, outDir, "recipes");
+    const writer = new Writer(config);
 
-    try {
-        rmSync(outDir, { recursive: true });
-    } catch {
-        // Directory doesn't exist, ignore
-    }
-    mkdirSync(recipesDir, { recursive: true });
+    writer.setup();
 
-    writeFileSync(path.join(outDir, "cn.ts"), cnTemplate());
-    writeFileSync(path.join(outDir, "cva.ts"), cvaTemplate());
-    writeFileSync(path.join(outDir, "sva.ts"), svaTemplate());
+    writer.writeCN();
+    writer.writeCVA();
+    writer.writeSVA();
 
     const ctx = new BuilderContext();
 
@@ -42,11 +30,10 @@ export function execute({ config, recipes }: BuilderParams) {
     }
 
     ctx.recipes.forEach((recipe) => {
-        writeFileSync(path.join(recipesDir, `${recipe.name}.ts`), recipeTemplate(recipe));
+        writer.writeRecipe(recipe);
     });
 
-    const twContent = [recipesDir, ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`)];
-    writeFileSync(path.join(outDir, "plugin.ts"), tailwindTemplate(ctx.components, twContent));
+    writer.writeTailwindPlugin(ctx.components);
 
     const end = performance.now();
     console.log(
