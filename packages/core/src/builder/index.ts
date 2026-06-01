@@ -6,7 +6,6 @@ import type { ResolvedRecipe, ResolvedSlotRecipe } from "../recipes/resolve.ts";
 import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
 import recipeTemplate from "../templates/recipe.ts";
-import slotRecipeTemplate from "../templates/slot-recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind.ts";
 import { BuilderContext } from "./context.ts";
@@ -15,8 +14,6 @@ import { processSVA } from "./process-sva.ts";
 
 export function execute(recipes: (ResolvedRecipe | ResolvedSlotRecipe)[], config: ResolvedConfig) {
     const start = performance.now();
-
-    const ctx = new BuilderContext();
 
     const outDir = path.resolve(config.rootDir, config.outDir);
     const recipesDir = path.resolve(config.rootDir, outDir, "recipes");
@@ -32,18 +29,15 @@ export function execute(recipes: (ResolvedRecipe | ResolvedSlotRecipe)[], config
     writeFileSync(path.join(outDir, "cva.ts"), cvaTemplate());
     writeFileSync(path.join(outDir, "sva.ts"), svaTemplate());
 
-    for (const recipe of recipes) {
-        const { type, name, definition } = recipe;
+    const ctx = new BuilderContext();
 
-        if (type === "cva") processCVA(ctx, name, definition);
-        else if (type === "sva") processSVA(ctx, name, definition);
+    for (const recipe of recipes) {
+        if (recipe.type === "cva") processCVA(ctx, recipe);
+        else if (recipe.type === "sva") processSVA(ctx, recipe);
     }
 
-    ctx.recipes.forEach(({ name, definition }) => {
-        writeFileSync(path.join(recipesDir, `${name}.ts`), recipeTemplate(name, definition));
-    });
-    ctx.slotRecipes.forEach(({ name, definition }) => {
-        writeFileSync(path.join(recipesDir, `${name}.ts`), slotRecipeTemplate(name, definition));
+    ctx.recipes.forEach((recipe) => {
+        writeFileSync(path.join(recipesDir, `${recipe.name}.ts`), recipeTemplate(recipe));
     });
 
     const twContent = [recipesDir, ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`)];
@@ -51,6 +45,6 @@ export function execute(recipes: (ResolvedRecipe | ResolvedSlotRecipe)[], config
 
     const end = performance.now();
     console.log(
-        `[${LIBRARY_NAME}] Generated ${ctx.components.length} declaration(s) for ${ctx.recipes.size} recipe(s) and ${ctx.slotRecipes.size} slot recipe(s) in ${(end - start).toFixed(2)}ms`,
+        `[${LIBRARY_NAME}] Generated ${ctx.components.length} declaration(s) for ${ctx.recipes.size} recipe(s) in ${(end - start).toFixed(2)}ms`,
     );
 }

@@ -1,9 +1,9 @@
 import { kebabCase } from "scule";
-import type { ResolvedSlotRecipeDefinition } from "../recipes/resolve.ts";
+import type { ResolvedSlotRecipe } from "../recipes/resolve.ts";
 import type { SlotVariantsDefinition } from "../types.ts";
 import type { BuilderContext } from "./context.ts";
 
-export function processSVA(ctx: BuilderContext, name: string, definition: ResolvedSlotRecipeDefinition) {
+export function processSVA(ctx: BuilderContext, { name, type, definition }: ResolvedSlotRecipe) {
     const rootClassName = definition.className ?? kebabCase(name);
     const base = {} as Record<string, string>;
     const variants: SlotVariantsDefinition = {};
@@ -31,8 +31,9 @@ export function processSVA(ctx: BuilderContext, name: string, definition: Resolv
         }
     }
 
-    ctx.addSlotRecipe(definition.hash, {
+    ctx.addRecipe(definition.hash, {
         name,
+        type,
         definition: {
             base: base,
             variants: variants,
