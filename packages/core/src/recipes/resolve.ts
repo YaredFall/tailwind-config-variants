@@ -8,6 +8,8 @@ export type ResolvedSlotRecipeDefinition = SlotRecipeDefinition & { hash: string
 export type ResolvedRecipe = { name: string; type: "cva"; definition: ResolvedRecipeDefinition };
 export type ResolvedSlotRecipe = { name: string; type: "sva"; definition: ResolvedSlotRecipeDefinition };
 
+export type ResolvedRecipes = Map<string, ResolvedRecipe | ResolvedSlotRecipe>;
+
 function isCVA(recipe: RecipeDefinition | SlotRecipeDefinition): recipe is ResolvedRecipeDefinition {
     return "__type" in recipe && recipe.__type === "cva";
 }
@@ -26,14 +28,17 @@ export function resolveRecipe({
     throw new Error(`Failed to resolve recipe at ${resolvedPath}`);
 }
 
-export function resolveRecipes(files: ResolvedFile<RecipeDefinition | SlotRecipeDefinition>[]) {
-    const resolved: (ResolvedRecipe | ResolvedSlotRecipe)[] = [];
+export function resolveRecipes(files: ResolvedFile<RecipeDefinition | SlotRecipeDefinition>[]): ResolvedRecipes {
+    const resolved: ResolvedRecipes = new Map();
+
     files.forEach((file) => {
         try {
-            resolved.push(resolveRecipe(file));
+            const recipe = resolveRecipe(file);
+            resolved.set(recipe.definition.hash, recipe);
         } catch {
             // Skip unresolved
         }
     });
+
     return resolved;
 }

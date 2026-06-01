@@ -1,14 +1,14 @@
 import type { ResolvedConfig } from "../config/resolve.ts";
 import { LIBRARY_NAME } from "../constant.ts";
-import type { ResolvedRecipe, ResolvedSlotRecipe } from "../recipes/resolve.ts";
+import type { ResolvedRecipes } from "../recipes/resolve.ts";
 import { BuilderContext } from "./context.ts";
 import { processCVA } from "./process-cva.ts";
 import { processSVA } from "./process-sva.ts";
 import { Writer } from "./writer.ts";
 
 type BuilderParams = {
-    recipes: (ResolvedRecipe | ResolvedSlotRecipe)[];
     config: ResolvedConfig;
+    recipes: ResolvedRecipes;
 };
 
 export function execute({ config, recipes }: BuilderParams) {
@@ -24,10 +24,10 @@ export function execute({ config, recipes }: BuilderParams) {
 
     const ctx = new BuilderContext();
 
-    for (const recipe of recipes) {
+    recipes.forEach((recipe) => {
         if (recipe.type === "cva") processCVA(ctx, recipe);
         else if (recipe.type === "sva") processSVA(ctx, recipe);
-    }
+    });
 
     ctx.recipes.forEach((recipe) => {
         writer.writeRecipe(recipe);
