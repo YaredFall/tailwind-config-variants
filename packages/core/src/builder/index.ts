@@ -2,20 +2,21 @@ import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as path from "pathe";
 import type { ResolvedConfig } from "../config/resolve.ts";
 import { LIBRARY_NAME } from "../constant.ts";
-import { isCVA, isSVA } from "../recipes/predicate.ts";
+import type { ResolvedRecipe, ResolvedSlotRecipe } from "../recipes/resolve.ts";
 import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
 import recipeTemplate from "../templates/recipe.ts";
 import slotRecipeTemplate from "../templates/slot-recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind.ts";
-import type { RecipeDefinition, SlotRecipeDefinition } from "../types.ts";
 import { BuilderContext } from "./context.ts";
 import { processCVA } from "./process-cva.ts";
 import { processSVA } from "./process-sva.ts";
 
-export function execute(recipes: Record<string, RecipeDefinition | SlotRecipeDefinition>, config: ResolvedConfig) {
+export function execute(recipes: (ResolvedRecipe | ResolvedSlotRecipe)[], config: ResolvedConfig) {
     const start = performance.now();
+
+    const ctx = new BuilderContext();
 
     const outDir = path.resolve(config.rootDir, config.outDir);
     const recipesDir = path.resolve(config.rootDir, outDir, "recipes");
@@ -31,17 +32,11 @@ export function execute(recipes: Record<string, RecipeDefinition | SlotRecipeDef
     writeFileSync(path.join(outDir, "cva.ts"), cvaTemplate());
     writeFileSync(path.join(outDir, "sva.ts"), svaTemplate());
 
-    const ctx = new BuilderContext();
+    for (const recipe of recipes) {
+        const { type, name, definition } = recipe;
 
-    for (const name in recipes) {
-        const recipe = recipes[name];
-        if (!recipe) continue;
-
-        if (isCVA(recipe)) {
-            processCVA(ctx, name, recipe);
-        } else if (isSVA(recipe)) {
-            processSVA(ctx, name, recipe);
-        }
+        if (type === "cva") processCVA(ctx, name, definition);
+        else if (type === "sva") processSVA(ctx, name, definition);
     }
 
     ctx.recipes.forEach((recipe, key) => {

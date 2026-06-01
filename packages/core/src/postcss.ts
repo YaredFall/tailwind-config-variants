@@ -4,8 +4,7 @@ import { loadConfig } from "./config/load.ts";
 import { resolveConfig } from "./config/resolve.ts";
 import { POSTCSS_PLUGIN_NAME } from "./constant.ts";
 import { loadRecipes } from "./recipes/load.ts";
-import { resolveRecipe } from "./recipes/resolve.ts";
-import type { RecipeDefinition, SlotRecipeDefinition } from "./types.ts";
+import { resolveRecipes } from "./recipes/resolve.ts";
 
 const plugin = (): ReturnType<PluginCreator<unknown>> => {
     return {
@@ -27,18 +26,9 @@ const plugin = (): ReturnType<PluginCreator<unknown>> => {
             const resolvedConfig = resolveConfig(config);
 
             const recipes = await loadRecipes(resolvedConfig.recipes);
+            recipes.forEach((file) => void addDependency(file.resolvedPath));
 
-            const resolvedRecipes = {} as Record<string, RecipeDefinition | SlotRecipeDefinition>;
-            recipes.forEach((file) => {
-                try {
-                    const { name, definition } = resolveRecipe(file);
-                    resolvedRecipes[name] = definition;
-
-                    addDependency(file.resolvedPath);
-                } catch {
-                    // Skip unresolved
-                }
-            });
+            const resolvedRecipes = resolveRecipes(recipes);
 
             execute(resolvedRecipes, resolvedConfig);
         },
