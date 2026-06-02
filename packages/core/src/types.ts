@@ -42,15 +42,20 @@ export interface SlotRecipeDefinition<
     className?: string;
 }
 
-export type CVA<V extends VariantsDefinition = VariantsDefinition> = (
-    variant?: RecipeVariant<V>,
-    ...className: ClassValue[]
-) => string;
+export interface CVA<V extends VariantsDefinition = VariantsDefinition> {
+    (variant?: RecipeVariant<V>, ...className: ClassValue[]): string;
+    config: Recipe<V>;
+    variantKeys: VariantKeys<V>;
+    variantMap: VariantMap<V>;
+    splitProps: <P extends RecipeVariant<V>>(props: P) => [Pick<P, keyof V>, Omit<P, keyof V>];
+}
 
-export type SVA<S extends string = string, SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>> = (
-    variant?: RecipeVariant<SV>,
-) => { [K in S]: (...className: ClassValue[]) => string };
+export interface SVA<S extends string = string, SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>> {
+    (variant?: RecipeVariant<SV>): { [K in S]: (...className: ClassValue[]) => string };
+    config: SlotRecipe<S, SV>;
+    variantKeys: VariantKeys<SV>;
+    variantMap: VariantMap<SV>;
+    splitProps: <P extends RecipeVariant<SV>>(props: P) => [Pick<P, keyof SV>, Omit<P, keyof SV>];
+}
 
-export type RecipeVariantProps<V extends CVA<VariantsDefinition> | SVA<string, SlotVariantsDefinition<string>>> =
-    Pretty<NonNullable<Parameters<V>[0]>>;
-
+export type RecipeVariantProps<V extends CVA<any> | SVA<string, any>> = Pretty<NonNullable<Parameters<V>[0]>>;
