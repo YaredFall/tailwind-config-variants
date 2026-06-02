@@ -6,7 +6,7 @@ export default defineConfig([
         dts: true,
     },
     {
-        entry: { postcss: "./src/postcss/index.ts" },
+        entry: { postcss: "./src/postcss.ts" },
         format: ["cjs", "esm"],
     },
 ]);
