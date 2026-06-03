@@ -1,8 +1,8 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as path from "pathe";
 import type { ResolvedConfig } from "../config/resolve";
-import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
+import cxTemplate from "../templates/cx.ts";
 import recipeTemplate from "../templates/recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import tailwindTemplate from "../templates/tailwind-plugin.ts";
@@ -36,8 +36,8 @@ export class Writer {
         writeFileSync(path.join(this.#outDir, pathname), content);
     }
 
-    writeCN() {
-        this.write("cn.ts", cnTemplate());
+    writeCX() {
+        this.write("cx.ts", cxTemplate());
     }
 
     writeCVA() {

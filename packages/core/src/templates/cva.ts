@@ -10,7 +10,7 @@ import {
     type Recipe,
     type VariantsDefinition,
 } from "@tailwind-config-variants/core";
-import { cn } from "./cn";
+import { cx } from "./cx";
 
 export function cva<V extends VariantsDefinition>({ base, variants, defaultVariants }: Recipe<V>): CVA<V> {
     const cva: CVA<V> = (variant = {}, ...className) => {
@@ -25,7 +25,7 @@ export function cva<V extends VariantsDefinition>({ base, variants, defaultVaria
             }
         }
 
-        return cn(...classNames, ...className);
+        return cx(...classNames, ...className);
     };
 
     cva.config = { base, variants, defaultVariants };

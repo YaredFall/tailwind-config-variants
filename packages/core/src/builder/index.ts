@@ -18,7 +18,7 @@ export function execute({ config, recipes }: BuilderParams) {
 
     writer.setup();
 
-    writer.writeCN();
+    writer.writeCX();
     writer.writeCVA();
     writer.writeSVA();
 

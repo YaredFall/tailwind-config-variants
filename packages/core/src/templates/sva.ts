@@ -10,7 +10,7 @@ import {
     type SlotVariantsDefinition,
     type SVA,
 } from "@tailwind-config-variants/core";
-import { cn } from "./cn";
+import { cx } from "./cx";
 
 export function sva<S extends string, SV extends SlotVariantsDefinition<S>>({
     base,
@@ -36,7 +36,7 @@ export function sva<S extends string, SV extends SlotVariantsDefinition<S>>({
 
         const result = {} as ReturnType<SVA<S, SV>>;
         for (const slot in slotClassNames) {
-            result[slot] = (...className) => cn(...slotClassNames[slot], ...className);
+            result[slot] = (...className) => cx(...slotClassNames[slot], ...className);
         }
 
         return result;
