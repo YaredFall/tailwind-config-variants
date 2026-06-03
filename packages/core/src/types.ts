@@ -2,7 +2,7 @@ type BooleanStringToBoolean<T> = T extends "true" | "false" ? boolean : T;
 
 type Pretty<T> = { [K in keyof T]: T[K] } & {};
 
-export type ClassValue = string | null | undefined;
+export type ClassValue = string | boolean | null | undefined;
 
 export type VariantsDefinition = Record<string, Record<string, string>>;
 export type SlotVariantsDefinition<S extends string = string> = Record<string, Record<string, { [K in S]?: string }>>;
