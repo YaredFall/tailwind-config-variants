@@ -19,7 +19,7 @@ export function processSVA(ctx: BuilderContext, { id, name, type, definition }: 
             for (const key in definition.variants) {
                 for (const variant in definition.variants[key]) {
                     const groupName = `${baseClassName}-${key}`;
-                    const className = `${groupName}-${variant}`;
+                    const className = variant === "true" ? groupName : `${groupName}-${variant}`;
                     const styles = definition.variants[key][variant]?.[slot];
 
                     variants[key] ??= {};
