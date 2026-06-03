@@ -1,12 +1,8 @@
 import { camelCase, pascalCase } from "scule";
+import type { RecipeData } from "../builder/context.ts";
 import { LIBRARY_NAME } from "../constant.ts";
-import type { Recipe, SlotRecipe } from "../types";
 
-export default function recipeTemplate({
-    name,
-    type,
-    definition,
-}: { name: string; type: "cva"; definition: Recipe } | { name: string; type: "sva"; definition: SlotRecipe }) {
+export default function recipeTemplate({ name, type, definition }: RecipeData) {
     const variableName = camelCase(name);
     const typeName = pascalCase(`${name}Variants`);
 
