@@ -2,11 +2,11 @@ import * as path from "pathe";
 import type { ResolvedFile } from "../loader";
 import type { RecipeDefinition, SlotRecipeDefinition } from "../types";
 
-export type ResolvedRecipeDefinition = RecipeDefinition & { hash: string };
-export type ResolvedSlotRecipeDefinition = SlotRecipeDefinition & { hash: string };
+export type ResolvedRecipeDefinition = RecipeDefinition;
+export type ResolvedSlotRecipeDefinition = SlotRecipeDefinition;
 
-export type ResolvedRecipe = { name: string; type: "cva"; definition: ResolvedRecipeDefinition };
-export type ResolvedSlotRecipe = { name: string; type: "sva"; definition: ResolvedSlotRecipeDefinition };
+export type ResolvedRecipe = { id: string; name: string; type: "cva"; definition: ResolvedRecipeDefinition };
+export type ResolvedSlotRecipe = { id: string; name: string; type: "sva"; definition: ResolvedSlotRecipeDefinition };
 
 export type ResolvedRecipes = Map<string, ResolvedRecipe | ResolvedSlotRecipe>;
 
@@ -17,28 +17,31 @@ function isSVA(recipe: RecipeDefinition | SlotRecipeDefinition): recipe is Resol
     return "__type" in recipe && recipe.__type === "sva";
 }
 
-export function resolveRecipe({
-    module,
-    resolvedPath,
-}: ResolvedFile<RecipeDefinition | SlotRecipeDefinition>): ResolvedRecipe | ResolvedSlotRecipe {
-    const name = path.basename(resolvedPath).split(".")[0] ?? path.basename(resolvedPath);
-    if (isCVA(module)) return { name, type: "cva", definition: module };
-    if (isSVA(module)) return { name, type: "sva", definition: module };
-
-    throw new Error(`Failed to resolve recipe at ${resolvedPath}`);
-}
-
 export function resolveRecipes(files: ResolvedFile<RecipeDefinition | SlotRecipeDefinition>[]): ResolvedRecipes {
     const resolved: ResolvedRecipes = new Map();
 
-    files.forEach((file) => {
-        try {
-            const recipe = resolveRecipe(file);
-            resolved.set(recipe.definition.hash, recipe);
-        } catch {
-            // Skip unresolved
+    const getUID = () => {
+        let id = generateID();
+        while (resolved.has(id)) id = generateID();
+        return id;
+    };
+
+    files.forEach(({ module, resolvedPath }) => {
+        const name = path.basename(resolvedPath).split(".")[0] ?? path.basename(resolvedPath);
+
+        if (isCVA(module)) {
+            const id = getUID();
+            resolved.set(id, { id, name, type: "cva", definition: module });
+        }
+        if (isSVA(module)) {
+            const id = getUID();
+            resolved.set(id, { id, name, type: "sva", definition: module });
         }
     });
 
     return resolved;
+}
+
+function generateID() {
+    return Math.random().toString(36).slice(2);
 }

@@ -3,7 +3,7 @@ import type { ResolvedRecipe } from "../recipes/resolve.ts";
 import type { VariantsDefinition } from "../types.ts";
 import type { BuilderContext } from "./context.ts";
 
-export function processCVA(ctx: BuilderContext, { name, type, definition }: ResolvedRecipe) {
+export function processCVA(ctx: BuilderContext, { id, name, type, definition }: ResolvedRecipe) {
     const baseStyles = definition.base;
     const baseClassName = definition.className ?? kebabCase(name);
 
@@ -26,7 +26,7 @@ export function processCVA(ctx: BuilderContext, { name, type, definition }: Reso
         }
     }
 
-    ctx.addRecipe(definition.hash, {
+    ctx.addRecipe(id, {
         name,
         type,
         definition: {

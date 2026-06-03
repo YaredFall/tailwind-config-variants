@@ -29,15 +29,15 @@ export class BuilderContext {
         return this.#groups;
     }
 
-    addRecipe(hash: string, recipe: RecipeData) {
-        this.#recipes.set(hash, recipe);
+    addRecipe(id: string, recipe: RecipeData) {
+        this.#recipes.set(id, recipe);
     }
 
     get recipes() {
         return this.#recipes;
     }
 
-    getRecipe(hash: string) {
-        return this.#recipes.get(hash);
+    getRecipe(id: string) {
+        return this.#recipes.get(id);
     }
 }
