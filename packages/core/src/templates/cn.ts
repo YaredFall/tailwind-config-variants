@@ -22,5 +22,5 @@ function cn() {
     return result;
 }
 
-export { cn };`;
+export { type ClassValue, cn };`;
 }
