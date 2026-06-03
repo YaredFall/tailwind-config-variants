@@ -15,7 +15,7 @@ function cx() {
 
         if (typeof e === "string") {
             if (result) result += " ";
-            result += (result && " ") + e;
+            result += e;
         }
     }
 
