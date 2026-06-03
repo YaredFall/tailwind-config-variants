@@ -5,8 +5,9 @@ import cvaTemplate from "../templates/cva.ts";
 import cxTemplate from "../templates/cx.ts";
 import recipeTemplate from "../templates/recipe.ts";
 import svaTemplate from "../templates/sva.ts";
+import tailwindMergeTemplate from "../templates/tailwind-merge.ts";
 import tailwindTemplate from "../templates/tailwind-plugin.ts";
-import type { ComponentData, RecipeData } from "./context";
+import type { ComponentData, GroupsData, RecipeData } from "./context";
 
 const RECIPES_FOLDER = "recipes";
 
@@ -50,6 +51,10 @@ export class Writer {
 
     writeTailwindPlugin(components: ComponentData[]) {
         this.write("plugin.ts", tailwindTemplate(components, this.#tailwindContent));
+    }
+
+    writeTailwindMergePlugin(groups: GroupsData) {
+        this.write("tailwind-merge.ts", tailwindMergeTemplate(groups));
     }
 
     writeRecipe(recipe: RecipeData) {

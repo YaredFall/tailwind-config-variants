@@ -34,6 +34,7 @@ export function execute({ config, recipes }: BuilderParams) {
     });
 
     writer.writeTailwindPlugin(ctx.components);
+    writer.writeTailwindMergePlugin(ctx.groups);
 
     const end = performance.now();
     console.log(

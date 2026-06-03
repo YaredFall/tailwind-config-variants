@@ -13,13 +13,15 @@ export function processCVA(ctx: BuilderContext, { name, type, definition }: Reso
     if (definition.variants) {
         for (const key in definition.variants) {
             for (const variant in definition.variants[key]) {
-                const className = `${baseClassName}-${key}-${variant}`;
+                const groupName = `${baseClassName}-${key}`;
+                const className = `${groupName}-${variant}`;
                 const styles = definition.variants[key][variant];
 
                 variants[key] ??= {};
                 variants[key][variant] = styles ? className : "";
 
                 if (styles) ctx.addComponent({ className, styles });
+                ctx.addGroupValue(groupName, className);
             }
         }
     }
