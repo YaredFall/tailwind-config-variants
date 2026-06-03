@@ -10,7 +10,7 @@ export function processSVA(ctx: BuilderContext, { id, name, type, definition }: 
 
     for (const slot in definition.base) {
         const baseStyles = definition.base[slot];
-        const baseClassName = `${rootClassName}-${slot}`;
+        const baseClassName = `${rootClassName}_${slot}`;
 
         base[slot] = baseStyles ? baseClassName : "";
         if (baseStyles) ctx.addComponent({ className: baseClassName, styles: baseStyles });
