@@ -5,7 +5,7 @@ import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
 import recipeTemplate from "../templates/recipe.ts";
 import svaTemplate from "../templates/sva.ts";
-import tailwindTemplate from "../templates/tailwind.ts";
+import tailwindTemplate from "../templates/tailwind-plugin.ts";
 import type { ComponentData, RecipeData } from "./context";
 
 const RECIPES_FOLDER = "recipes";
