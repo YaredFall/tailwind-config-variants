@@ -29,6 +29,9 @@
         ".": "./src/index.ts",
         "./postcss": "./src/postcss.ts"
     },
+    "bin": {
+        "tcv": "./dist/bin.mjs"
+    },
     "devDependencies": {
         "@types/node": "^24",
         "tailwindcss": "^3.4 || ^4.0"

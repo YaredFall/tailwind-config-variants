@@ -9,4 +9,8 @@ export default defineConfig([
         entry: { postcss: "./src/postcss.ts" },
         format: ["cjs", "esm"],
     },
+    {
+        entry: { bin: "./src/bin/index.ts" },
+        format: ["esm"],
+    },
 ]);
