@@ -1,6 +1,4 @@
-type BooleanStringToBoolean<T> = T extends "true" | "false" ? boolean : T;
-
-type Pretty<T> = { [K in keyof T]: T[K] } & {};
+import type { BooleanStringToBoolean, Pretty } from "./system-types";
 
 export type ClassValue = string | boolean | null | undefined;
 

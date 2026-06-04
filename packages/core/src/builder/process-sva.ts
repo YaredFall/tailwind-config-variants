@@ -1,6 +1,6 @@
 import { kebabCase } from "scule";
 import type { ResolvedSlotRecipe } from "../recipes/resolve.ts";
-import type { SlotVariantsDefinition } from "../types.ts";
+import type { SlotVariantsDefinition } from "../recipes/types.ts";
 import type { BuilderContext } from "./context.ts";
 
 export function processSVA(ctx: BuilderContext, { id, name, type, definition }: ResolvedSlotRecipe) {

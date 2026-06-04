@@ -1,6 +1,6 @@
 import * as path from "pathe";
 import type { ResolvedFile } from "../loader";
-import type { RecipeDefinition, SlotRecipeDefinition } from "../types";
+import type { RecipeDefinition, SlotRecipeDefinition } from "./types";
 
 export type ResolvedRecipeDefinition = RecipeDefinition;
 export type ResolvedSlotRecipeDefinition = SlotRecipeDefinition;

@@ -1,10 +1,10 @@
-import type { Recipe, SlotRecipe } from "../types";
+import type { RecipeDefinition, SlotRecipeDefinition, StyleDeclaration } from "../recipes/types";
 
-export type ComponentData = { className: string; styles: string };
+export type ComponentData = { className: string; styles: StyleDeclaration };
 export type GroupsData = Map<string, string[]>;
 export type RecipeData =
-    | { name: string; type: "cva"; definition: Recipe }
-    | { name: string; type: "sva"; definition: SlotRecipe };
+    | { name: string; type: "cva"; definition: RecipeDefinition }
+    | { name: string; type: "sva"; definition: SlotRecipeDefinition };
 
 export class BuilderContext {
     #components: ComponentData[] = [];

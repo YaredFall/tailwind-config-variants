@@ -1,6 +1,6 @@
 import { kebabCase } from "scule";
 import type { ResolvedRecipe } from "../recipes/resolve.ts";
-import type { VariantsDefinition } from "../types.ts";
+import type { VariantsDefinition } from "../recipes/types.ts";
 import type { BuilderContext } from "./context.ts";
 
 export function processCVA(ctx: BuilderContext, { id, name, type, definition }: ResolvedRecipe) {
