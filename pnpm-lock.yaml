@@ -23,9 +23,6 @@ importers:
 
   packages/core:
     dependencies:
-      csstype:
-        specifier: ^3.2.3
-        version: 3.2.3
       globby:
         specifier: ^16.2.0
         version: 16.2.0
@@ -45,6 +42,9 @@ importers:
       '@types/node':
         specifier: ^24
         version: 24.12.0
+      csstype:
+        specifier: ^3
+        version: 3.2.3
       tailwindcss:
         specifier: ^3.4 || ^4.0
         version: 4.2.2
