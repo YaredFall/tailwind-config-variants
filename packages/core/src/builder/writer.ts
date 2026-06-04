@@ -50,7 +50,7 @@ export class Writer {
     }
 
     writeTailwindPlugin(components: ComponentData[]) {
-        this.write("plugin.js", tailwindTemplate(components, this.#tailwindContent));
+        this.write("tailwind-plugin.js", tailwindTemplate(components, this.#tailwindContent));
     }
 
     writeTailwindMergePlugin(groups: GroupsData) {
