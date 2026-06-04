@@ -5,9 +5,10 @@ import cvaTemplate from "../templates/cva.ts";
 import cxTemplate from "../templates/cx.ts";
 import recipeTemplate from "../templates/recipe.ts";
 import svaTemplate from "../templates/sva.ts";
+import { tailwindContentTemplate } from "../templates/tailwind-content.ts";
 import tailwindMergeTemplate from "../templates/tailwind-merge.ts";
 import tailwindTemplate from "../templates/tailwind-plugin.ts";
-import type { ComponentData, GroupsData, RecipeData } from "./context";
+import type { BuilderContext, GroupsData, RecipeData } from "./context";
 
 const RECIPES_FOLDER = "recipes";
 
@@ -21,7 +22,10 @@ export class Writer {
         this.#outDir = path.resolve(config.rootDir, config.outDir);
         this.#recipesDir = path.resolve(config.rootDir, this.#outDir, RECIPES_FOLDER);
 
-        this.#tailwindContent = [this.#recipesDir, ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`)];
+        this.#tailwindContent = [
+            path.join(this.#outDir, "tailwind-content.json"),
+            ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`),
+        ];
     }
 
     setup() {
@@ -49,8 +53,12 @@ export class Writer {
         this.write("sva.ts", svaTemplate());
     }
 
-    writeTailwindPlugin(components: ComponentData[]) {
-        this.write("tailwind-plugin.js", tailwindTemplate(components, this.#tailwindContent));
+    writeTailwindPlugin(ctx: BuilderContext) {
+        this.write(
+            "tailwind-content.json",
+            tailwindContentTemplate({ components: ctx.components, recipes: ctx.recipes }),
+        );
+        this.write("tailwind-plugin.js", tailwindTemplate(ctx.components, this.#tailwindContent));
     }
 
     writeTailwindMergePlugin(groups: GroupsData) {

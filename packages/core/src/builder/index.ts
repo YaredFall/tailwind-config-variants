@@ -33,7 +33,7 @@ export function execute({ config, recipes }: BuilderParams) {
         writer.writeRecipe(recipe);
     });
 
-    writer.writeTailwindPlugin(ctx.components);
+    writer.writeTailwindPlugin(ctx);
     writer.writeTailwindMergePlugin(ctx.groups);
 
     inform(`Generated ${ctx.components.length} declaration(s) for ${ctx.recipes.size} recipe(s) in {time}`);

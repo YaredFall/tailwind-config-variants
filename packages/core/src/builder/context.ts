@@ -5,11 +5,12 @@ export type GroupsData = Map<string, string[]>;
 export type RecipeData =
     | { name: string; type: "cva"; definition: RecipeDefinition }
     | { name: string; type: "sva"; definition: SlotRecipeDefinition };
+export type RecipesData = Map<string, RecipeData>;
 
 export class BuilderContext {
     #components: ComponentData[] = [];
     #groups: GroupsData = new Map();
-    #recipes = new Map<string, RecipeData>();
+    #recipes: RecipesData = new Map();
 
     addComponent(component: ComponentData) {
         this.#components.push(component);
