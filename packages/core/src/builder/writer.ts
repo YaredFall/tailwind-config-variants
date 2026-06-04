@@ -8,6 +8,8 @@ import svaTemplate from "../templates/sva.ts";
 import { tailwindContentTemplate } from "../templates/tailwind-content.ts";
 import tailwindMergeTemplate from "../templates/tailwind-merge.ts";
 import tailwindTemplate from "../templates/tailwind-plugin.ts";
+import typesTemplate from "../templates/types.ts";
+import utilsTemplate from "../templates/utils.ts";
 import type { BuilderContext, GroupsData, RecipeData } from "./context";
 
 const RECIPES_FOLDER = "recipes";
@@ -41,6 +43,10 @@ export class Writer {
         writeFileSync(path.join(this.#outDir, pathname), content);
     }
 
+    writeTypes() {
+        this.write("types.ts", typesTemplate());
+    }
+
     writeCX() {
         this.write("cx.ts", cxTemplate());
     }
@@ -51,6 +57,10 @@ export class Writer {
 
     writeSVA() {
         this.write("sva.ts", svaTemplate());
+    }
+
+    writeUtils() {
+        this.write("utils.ts", utilsTemplate());
     }
 
     writeTailwindPlugin(ctx: BuilderContext) {

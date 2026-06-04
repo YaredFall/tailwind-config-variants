@@ -18,9 +18,11 @@ export function execute({ config, recipes }: BuilderParams) {
 
     writer.setup();
 
+    writer.writeTypes();
     writer.writeCX();
     writer.writeCVA();
     writer.writeSVA();
+    writer.writeUtils();
 
     const ctx = new BuilderContext();
 
