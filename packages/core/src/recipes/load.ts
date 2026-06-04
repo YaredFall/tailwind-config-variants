@@ -1,6 +1,6 @@
 import { globby } from "globby";
 import { loadFile } from "../loader.ts";
-import type { RecipeDefinition, SlotRecipeDefinition } from "../types";
+import type { RecipeDefinition, SlotRecipeDefinition } from "./types";
 
 async function loadRecipe(path: string) {
     try {
