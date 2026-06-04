@@ -12,7 +12,11 @@ import {
 } from "@tailwind-config-variants/core";
 import { cx } from "./cx";
 
-export function cva<V extends VariantsDefinition>({ base, variants, defaultVariants }: Recipe<V>): CVA<V> {
+export function cva<V extends VariantsDefinition>({
+    base,
+    variants = {} as V,
+    defaultVariants = {},
+}: Recipe<V>): CVA<V> {
     const cva: CVA<V> = (variant = {}, ...className) => {
         const classNames = [base];
         for (const key in variants) {
@@ -34,6 +38,5 @@ export function cva<V extends VariantsDefinition>({ base, variants, defaultVaria
     cva.splitProps = createSplitProps(variants);
 
     return cva;
-}
-`;
+}`;
 }

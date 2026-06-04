@@ -14,8 +14,8 @@ import { cx } from "./cx";
 
 export function sva<S extends string, SV extends SlotVariantsDefinition<S>>({
     base,
-    variants,
-    defaultVariants,
+    variants = {} as SV,
+    defaultVariants = {},
 }: SlotRecipe<S, SV>): SVA<S, SV> {
     const sva: SVA<S, SV> = (variant = {}) => {
         const slotClassNames = {} as Record<S, (string | undefined)[]>;
@@ -25,7 +25,7 @@ export function sva<S extends string, SV extends SlotVariantsDefinition<S>>({
         for (const key in variants) {
             for (const slot in base) {
                 const variantValue = variant[key]?.toString();
-                const defaultValue = defaultVariants?.[key]?.toString();
+                const defaultValue = defaultVariants[key]?.toString();
                 if (variantValue) {
                     slotClassNames[slot].push(variants[key][variantValue][slot]);
                 } else if (defaultValue) {

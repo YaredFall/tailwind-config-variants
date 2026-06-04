@@ -17,12 +17,12 @@ export type VariantMap<V extends VariantsDefinition | SlotVariantsDefinition> = 
 }>;
 
 export interface Recipe<V extends VariantsDefinition = VariantsDefinition> {
-    base: string;
-    variants: V;
-    defaultVariants: RecipeVariant<V>;
+    base?: string;
+    variants?: V;
+    defaultVariants?: RecipeVariant<V>;
 }
 
-export interface RecipeDefinition<V extends VariantsDefinition = VariantsDefinition> extends Partial<Recipe<V>> {
+export interface RecipeDefinition<V extends VariantsDefinition = VariantsDefinition> extends Recipe<V> {
     className?: string;
 }
 
@@ -30,15 +30,15 @@ export interface SlotRecipe<
     S extends string = string,
     SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>,
 > {
-    base: Record<S, string>;
-    variants: SV;
-    defaultVariants: RecipeVariant<SV>;
+    base?: Record<S, string>;
+    variants?: SV;
+    defaultVariants?: RecipeVariant<SV>;
 }
 
 export interface SlotRecipeDefinition<
     S extends string = string,
     SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>,
-> extends Partial<SlotRecipe<S, SV>> {
+> extends SlotRecipe<S, SV> {
     className?: string;
 }
 
