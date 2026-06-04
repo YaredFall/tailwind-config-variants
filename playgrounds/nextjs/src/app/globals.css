@@ -1,6 +1,6 @@
 @import "tailwindcss" source("../../src");
 
-@plugin "../../.config-variants/plugin";
+@plugin "../../.config-variants/tailwind-plugin";
 
 :root {
     --background: #ffffff;
