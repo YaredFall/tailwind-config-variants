@@ -1,6 +1,9 @@
+import type * as CSS from "csstype";
 import type { BooleanStringToBoolean } from "../system-types";
 
-export type StyleDeclaration = string;
+type StylesObject = CSS.Properties & { [K in `--${string}`]: string };
+
+export type StyleDeclaration = string | StylesObject;
 export type VariantsDefinition = Record<string, Record<string, StyleDeclaration>>;
 
 export type RecipeVariant<V extends VariantsDefinition | SlotVariantsDefinition> = {

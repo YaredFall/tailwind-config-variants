@@ -10,9 +10,9 @@ const COMPONENTS = ${JSON.stringify(components, null, 4)};
 const tailwindConfigVariants = plugin(api => {
     COMPONENTS.forEach((component) => {
         api.addComponents({
-            [\`.\${component.className}\`]: {
-                [\`@apply \${component.styles}\`]: {}
-            }
+            [\`.\${component.className}\`]: typeof component.styles === "string" 
+                ? { [\`@apply \${component.styles}\`]: {} }
+                : component.styles 
         });
     });
 }, {
