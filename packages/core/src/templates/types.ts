@@ -25,10 +25,6 @@ export interface Recipe<V extends VariantsDefinition = VariantsDefinition> {
     defaultVariants?: RecipeVariant<V>;
 }
 
-export interface RecipeDefinition<V extends VariantsDefinition = VariantsDefinition> extends Recipe<V> {
-    className?: string;
-}
-
 export interface SlotRecipe<
     S extends string = string,
     SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>,
@@ -36,13 +32,6 @@ export interface SlotRecipe<
     base?: Record<S, string>;
     variants?: SV;
     defaultVariants?: RecipeVariant<SV>;
-}
-
-export interface SlotRecipeDefinition<
-    S extends string = string,
-    SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>,
-> extends SlotRecipe<S, SV> {
-    className?: string;
 }
 
 export interface CVA<V extends VariantsDefinition = VariantsDefinition> {
