@@ -6,7 +6,7 @@ import cxTemplate from "../templates/cx.ts";
 import recipeTemplate from "../templates/recipe.ts";
 import svaTemplate from "../templates/sva.ts";
 import { tailwindContentTemplate } from "../templates/tailwind-content.ts";
-import tailwindMergeTemplate from "../templates/tailwind-merge.ts";
+import tailwindMergePluginTemplate from "../templates/tailwind-merge-plugin.ts";
 import tailwindTemplate from "../templates/tailwind-plugin.ts";
 import typesTemplate from "../templates/types.ts";
 import utilsTemplate from "../templates/utils.ts";
@@ -72,7 +72,7 @@ export class Writer {
     }
 
     writeTailwindMergePlugin(groups: GroupsData) {
-        this.write("tailwind-merge.ts", tailwindMergeTemplate(groups));
+        this.write("tailwind-merge-plugin.ts", tailwindMergePluginTemplate(groups));
     }
 
     writeRecipe(recipe: RecipeData) {
