@@ -25,7 +25,7 @@ export interface RecipeConfig<V extends VariantsDefinition = VariantsDefinition>
     defaultVariants?: RecipeVariant<V>;
 }
 
-export interface SlotRecipe<
+export interface SlotRecipeConfig<
     S extends string = string,
     SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>,
 > {
@@ -44,7 +44,7 @@ export interface CVA<V extends VariantsDefinition = VariantsDefinition> {
 
 export interface SVA<S extends string = string, SV extends SlotVariantsDefinition<S> = SlotVariantsDefinition<S>> {
     (variant?: RecipeVariant<SV>): { [K in S]: (...className: ClassValue[]) => string };
-    config: SlotRecipe<S, SV>;
+    config: SlotRecipeConfig<S, SV>;
     variantKeys: VariantKeys<SV>;
     variantMap: VariantMap<SV>;
     splitProps: <P extends RecipeVariant<SV>>(props: P) => [Pick<P, keyof SV>, Omit<P, keyof SV>];
