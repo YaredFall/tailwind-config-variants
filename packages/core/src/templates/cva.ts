@@ -11,15 +11,16 @@ export function cva<V extends VariantsDefinition>({
     variants = {} as V,
     defaultVariants = {},
 }: Recipe<V>): CVA<V> {
-    const cva: CVA<V> = (variant = {}, ...className) => {
+    const cva: CVA<V> = (props = {}, ...className) => {
         const classNames = [base];
         for (const key in variants) {
-            const variantValue = variant[key]?.toString();
-            const defaultValue = defaultVariants[key]?.toString();
-            if (variantValue) {
-                classNames.push(variants[key][variantValue]);
-            } else if (defaultValue) {
-                classNames.push(variants[key][defaultValue]);
+            const variant = props[key]?.toString();
+            const defaultVariant = defaultVariants[key]?.toString();
+
+            if (variant && variant in variants[key]) {
+                classNames.push(variants[key][variant]);
+            } else if (defaultVariant && defaultVariant in variants[key]) {
+                classNames.push(variants[key][defaultVariant]);
             }
         }
 

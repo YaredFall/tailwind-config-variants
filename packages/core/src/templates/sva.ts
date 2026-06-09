@@ -11,19 +11,19 @@ export function sva<S extends string, SV extends SlotVariantsDefinition<S>>({
     variants = {} as SV,
     defaultVariants = {},
 }: SlotRecipe<S, SV>): SVA<S, SV> {
-    const sva: SVA<S, SV> = (variant = {}) => {
+    const sva: SVA<S, SV> = (props = {}) => {
         const slotClassNames = {} as Record<S, (string | undefined)[]>;
         for (const slot in base) {
             slotClassNames[slot] = [base[slot]];
         }
         for (const key in variants) {
             for (const slot in base) {
-                const variantValue = variant[key]?.toString();
-                const defaultValue = defaultVariants[key]?.toString();
-                if (variantValue) {
-                    slotClassNames[slot].push(variants[key][variantValue][slot]);
-                } else if (defaultValue) {
-                    slotClassNames[slot].push(variants[key][defaultValue][slot]);
+                const variant = props[key]?.toString();
+                const defaultVariant = defaultVariants[key]?.toString();
+                if (variant && variant in variants[key]) {
+                    slotClassNames[slot].push(variants[key][variant][slot]);
+                } else if (defaultVariant && defaultVariant in variants[key]) {
+                    slotClassNames[slot].push(variants[key][defaultVariant][slot]);
                 }
             }
         }
