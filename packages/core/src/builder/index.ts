@@ -20,6 +20,7 @@ export function execute({ config, recipes }: BuilderParams) {
 
     writer.writeTypes();
     writer.writeCX();
+    writer.writeCN();
     writer.writeCVA();
     writer.writeSVA();
     writer.writeUtils();

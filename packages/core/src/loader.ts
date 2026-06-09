@@ -1,5 +1,5 @@
-import { fileURLToPath } from "node:url";
 import { createJiti } from "jiti";
+import { fileURLToPath } from "node:url";
 
 export type ResolvedFile<T> = { module: T; resolvedPath: string };
 

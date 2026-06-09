@@ -1,6 +1,7 @@
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import * as path from "pathe";
 import type { ResolvedConfig } from "../config/resolve";
+import cnTemplate from "../templates/cn.ts";
 import cvaTemplate from "../templates/cva.ts";
 import cxTemplate from "../templates/cx.ts";
 import recipeTemplate from "../templates/recipe.ts";
@@ -49,6 +50,10 @@ export class Writer {
 
     writeCX() {
         this.write("cx.ts", cxTemplate());
+    }
+
+    writeCN() {
+        this.write("cn.ts", cnTemplate());
     }
 
     writeCVA() {
