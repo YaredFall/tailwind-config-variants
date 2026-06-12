@@ -5,8 +5,10 @@ import type { BuilderContext } from "./context.ts";
 
 export function processSVA(ctx: BuilderContext, { id, name, type, definition }: ResolvedSlotRecipe) {
     const rootClassName = definition.className ?? kebabCase(name);
+
     const base = {} as Record<string, string>;
     const variants: SlotVariantsDefinition = {};
+    const defaultVariants = definition.defaultVariants ?? {};
 
     for (const slot in definition.base) {
         const baseStyles = definition.base[slot];
@@ -37,9 +39,9 @@ export function processSVA(ctx: BuilderContext, { id, name, type, definition }: 
         name,
         type,
         definition: {
-            base: base,
-            variants: variants,
-            defaultVariants: definition.defaultVariants ?? {},
+            base,
+            variants,
+            defaultVariants,
         },
     });
 }

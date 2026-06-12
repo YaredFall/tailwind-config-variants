@@ -4,12 +4,14 @@ import type { VariantsDefinition } from "../recipes/types.ts";
 import type { BuilderContext } from "./context.ts";
 
 export function processCVA(ctx: BuilderContext, { id, name, type, definition }: ResolvedRecipe) {
-    const baseStyles = definition.base;
     const baseClassName = definition.className ?? kebabCase(name);
 
-    if (baseStyles) ctx.addComponent({ className: baseClassName, styles: baseStyles });
-
+    const base = definition.base ? baseClassName : "";
     const variants: VariantsDefinition = {};
+    const defaultVariants = definition.defaultVariants ?? {};
+
+    if (definition.base) ctx.addComponent({ className: baseClassName, styles: definition.base });
+
     if (definition.variants) {
         for (const key in definition.variants) {
             for (const variant in definition.variants[key]) {
@@ -30,9 +32,9 @@ export function processCVA(ctx: BuilderContext, { id, name, type, definition }: 
         name,
         type,
         definition: {
-            base: baseStyles ? baseClassName : "",
-            variants: variants,
-            defaultVariants: definition.defaultVariants ?? {},
+            base,
+            variants,
+            defaultVariants,
         },
     });
 }
