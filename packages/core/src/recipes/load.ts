@@ -1,11 +1,16 @@
 import { globby } from "globby";
 import { loadFile } from "../loader.ts";
+import * as logger from "../logger.ts";
 import type { RecipeDefinition, SlotRecipeDefinition } from "./types";
 
 async function loadRecipe(path: string) {
     try {
         return await loadFile<RecipeDefinition | SlotRecipeDefinition>(path);
-    } catch {
+    } catch (error: any) {
+        if (error.code !== "MODULE_NOT_FOUND") {
+            logger.log(`Unable to load recipe at ${path}`);
+            console.error(error);
+        }
         return undefined;
     }
 }
