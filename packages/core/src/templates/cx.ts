@@ -13,7 +13,7 @@ export function cx() {
     for (let i = 0; i < length; i++) {
         const e = arguments[i];
 
-        if (typeof e === "string") {
+        if (typeof e === "string" && e) {
             if (result) result += " ";
             result += e;
         }
