@@ -27,6 +27,7 @@ export class Writer {
 
         this.#tailwindContent = [
             path.join(this.#outDir, "tailwind-content.json"),
+            `!${path.join(this.#outDir, "**", "*.{js,ts}")}`,
             ...config.recipes.map((p) => `!${path.resolve(config.rootDir, p)}`),
         ];
     }
