@@ -2,7 +2,7 @@ import { kebabCase } from "scule";
 import type { ResolvedSlotRecipe } from "../recipes/resolve.ts";
 import type { SlotVariantsDefinition } from "../recipes/types.ts";
 import type { BuilderContext } from "./context.ts";
-import { getClassName } from "./get-class-name.ts";
+import { getBaseClassName, getVariantClassName } from "./get-class-name.ts";
 
 export function processSVA(ctx: BuilderContext, { id, name, type, definition }: ResolvedSlotRecipe) {
     const rootClassName = definition.className ?? kebabCase(name);
@@ -13,7 +13,7 @@ export function processSVA(ctx: BuilderContext, { id, name, type, definition }: 
 
     for (const slot in definition.base) {
         const baseStyles = definition.base[slot];
-        const baseClassName = `${rootClassName}_${slot}`;
+        const baseClassName = getBaseClassName(rootClassName, slot);
 
         base[slot] = baseStyles ? baseClassName : "";
         if (baseStyles) ctx.addComponent({ className: baseClassName, styles: baseStyles });
@@ -21,12 +21,7 @@ export function processSVA(ctx: BuilderContext, { id, name, type, definition }: 
         if (definition.variants) {
             for (const key in definition.variants) {
                 for (const variant in definition.variants[key]) {
-                    const className = getClassName({
-                        baseName: baseClassName,
-                        slotName: slot,
-                        variantKey: key,
-                        variantValue: variant,
-                    });
+                    const className = getVariantClassName(baseClassName, key, variant);
                     const styles = definition.variants[key][variant]?.[slot];
 
                     variants[key] ??= {};
