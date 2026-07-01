@@ -11,5 +11,6 @@ export function getClassName({
 }) {
     const baseClassName = slotName ? `${baseName}_${slotName}` : baseName;
     if (variantValue === "true") return `${baseClassName}-${variantKey}`;
-    return `${baseClassName}--${variantKey}-${variantValue}`;
+    if (variantValue === "false") return `${baseClassName}-not-${variantKey}`;
+    return `${baseClassName}-${variantKey}-${variantValue}`;
 }
