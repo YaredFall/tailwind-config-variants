@@ -1,6 +1,6 @@
 import type { RecipeDefinition, SlotRecipeDefinition, StyleDeclaration } from "../recipes/types";
 
-export type ComponentData = { className: string; styles: StyleDeclaration };
+export type ComponentData = { className: string; group?: string; styles: StyleDeclaration };
 export type GroupsData = Map<string, string[]>;
 export type RecipeData =
     | { name: string; type: "cva"; definition: RecipeDefinition }
@@ -9,7 +9,6 @@ export type RecipesData = Map<string, RecipeData>;
 
 export class BuilderContext {
     #components: ComponentData[] = [];
-    #groups: GroupsData = new Map();
     #recipes: RecipesData = new Map();
 
     addComponent(component: ComponentData) {
@@ -20,14 +19,16 @@ export class BuilderContext {
         return this.#components;
     }
 
-    addGroupValue(group: string, value: string) {
-        const values = this.#groups.get(group) || [];
-        values.push(value);
-        this.#groups.set(group, values);
-    }
-
     get groups() {
-        return this.#groups;
+        const groups: GroupsData = new Map();
+        this.components.forEach((component) => {
+            if (!component.group) return;
+
+            const groupValues = groups.get(component.group) || [];
+            groupValues.push(component.className);
+            groups.set(component.group, groupValues);
+        });
+        return groups;
     }
 
     addRecipe(id: string, recipe: RecipeData) {

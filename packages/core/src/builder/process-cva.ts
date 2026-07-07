@@ -16,14 +16,14 @@ export function processCVA(ctx: BuilderContext, { id, name, type, definition }: 
     if (definition.variants) {
         for (const key in definition.variants) {
             for (const variant in definition.variants[key]) {
+                const group = `${baseClassName}-${key}`;
                 const className = getVariantClassName(baseClassName, key, variant);
                 const styles = definition.variants[key][variant];
 
                 variants[key] ??= {};
                 variants[key][variant] = styles ? className : "";
 
-                if (styles) ctx.addComponent({ className, styles });
-                ctx.addGroupValue(`${baseClassName}-${key}`, className);
+                if (styles) ctx.addComponent({ group, className, styles });
             }
         }
     }
