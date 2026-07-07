@@ -9,8 +9,9 @@ const tailwindConfigVariants = plugin(api => {
     api.addComponents({
 ${components
     .map(
-        ({ className, styles }) =>
-            `\t\t".${className}": ${JSON.stringify(typeof styles === "string" ? { [`@apply ${styles}`]: {} } : styles)}`,
+        ({ className, styles }) => `\t\t".${className}": {
+            "@layer components": ${JSON.stringify(typeof styles === "string" ? { [`@apply ${styles}`]: {} } : styles)} 
+        }`,
     )
     .join(",\n")}
 });
