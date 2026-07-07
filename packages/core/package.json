@@ -13,7 +13,7 @@
         }
     },
     "name": "@tailwind-config-variants/core",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "type": "module",
     "scripts": {
         "typecheck": "tsc --noEmit",
